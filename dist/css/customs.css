@@ -1,0 +1,50 @@
+
+
+.table-hover tr:first-child:hover{
+    background-color: inherit;
+}
+
+.inv {
+    width: 100%;
+    margin: 10px 0 20px 0;
+}
+.inv tr td,
+.inv tr th
+{
+    border: 2px solid #777;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.center tr td, .center tr th{
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.inv tr td b.field{
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #444;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.label{
+    text-transform: uppercase;
+}
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:hover td{
+    background-color: #ccc;
+    border: #000;
+}
+
+li > a.selectedLi{
+    background-color: #eee;
+}
