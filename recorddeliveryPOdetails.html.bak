@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Adjust Accessories List</title>
+  <title>Purchase Order Details</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
   
   <link rel ="stylesheet" type = "text/css" href ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <link rel ="stylesheet" type = "text/css" href ="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
@@ -156,7 +157,7 @@
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">Admin</font>
+          <font face="Open Sans" size="1" color="white">Purchasing</font>
         </div>
         <div class="pull-left info">
           
@@ -167,68 +168,56 @@
       <ul class="sidebar-menu" data-widget="tree">
 		
         <li class="header">MAIN NAVIGATION</li>
-		<li class="active treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Bill of Materials</span>
-            
-          </a>
-        </li>
-
-		<li class="treeview">
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Accessories List <b><font size="3">(AL)</b></font></span>
-            
-          </a>
-        </li>
-		<li class="treeview">
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Adjust AL</span>
+            <i class="fa fa-edit"></i> <span>Create Suppliers</span>
             
           </a>
         </li>
 		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Check AL</span>
+            <i class="fa fa-male"></i> <span>Create Excel Price Summary</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Approve AL</span>
+            <i class="fa fa-hand-pointer-o"></i> <span>Select Supplier for Purchasing</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Requisition Slip <b><font size="3">(RS)</b></font></span>
+            <i class="fa fa-edit"></i> <span>Create List of Needed Materials</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-clone"></i> <span>Compare AL with RS</span>
+            <i class="fa fa-edit"></i> <span>Input Prices of Needed Materials</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Verify Purchase Order</span>
+            <i class="fa fa-edit"></i> <span>Create Purchase Order</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Whereabouts Slip</span>
+            <i class="fa fa-edit"></i> <span>Record Delivery Method</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Transfer Request</span>
+            <i class="fa fa-edit"></i> <span>Project Turnover</span>
             
           </a>
         </li>
       </ul>
+		
     </section>
     <!-- /.sidebar -->
   </aside>
@@ -239,12 +228,10 @@
 	
 	<div id="page-wrapper">
         <div class="container-fluid">
-			<br>
             <div class="box">
 			<section class="content-header">
-			  <h1><b>
-				Accessories List</b><br>
-				<small> Adjust Accessories List </small>
+			  <h1>
+				  Purchase Order Details
 			  </h1>
 			  <ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -253,107 +240,120 @@
 			</section>
                 <div class="row">
                     <div class="col-lg-12">
-					<br>
-                        <div class="col-xs-12">
-							<label><h4><b>Project Code: JFC-P124/17</b></h4></label>
-							<label class = "col-xs-4 pull-right"><h4><b>Type:</b> CWAL </h4></label>
-							
-							<div class="row">
-							
-							  <div class="col-xs-8">
-							  <b>Accessories List Name: </b> CWAL - Footing </div>
-							</div>
-							<div class="row">
-							  <div class="col-xs-8">
-								<b>Project Name: </b> Freshline - Beef Processing Plant
-							  </div>
-							  <div class="col-xs-4">
-								<b>Location: </b> Porac, Pampanga
-							  </div>
-							</div>
-							
-							<div class="row">
-							  <div class="col-xs-4">
-								<b>Department: </b> Engineering
-							  </div>
-							  <div class="col-xs-4"></div>
-							  
-							  <div class="col-xs-4">
-								<b>Date Created: </b> November 9, 2017
-							  </div>
-							</div>
-							
-							
-							<table class = "table table-striped table-bordered" style = "width:100%">
-							<tr>
-							  <th style = "text-align:center;">Items</th>
-							  <th>Materials</th>
-							  <th>Actual Dimension</th>
-							  <th style = "text-align:right;">Quantity</th>
+                      <div class="col-xs-12"><br>
+                          <label>Project Code:</label>
+                          <input disabled list="projectcodes" id="projects" placeholder="Enter project code..." value="RDF-P043/15V" class="form-control" autocomplete="off">
+                          <datalist id="projectcodes">
+                              <option value="RDF-P043/15V"></option>
+                              <option value="HSSH-P041/16V"></option>
+                          </datalist>
+                          <div class="form-group">
+                            <label>Date Created:</label>
+
+                            <div class="input-group date">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input disabled value="2015-03-05" type="date" class="form-control pull-right" id="datepicker">
+                          </div>
+                          <label>Monthly Control Number:</label>
+                            <input disabled value="002" type="number" class="form-control">
+                          <div class="form-group">
+                            <label>Delivery Schedule:</label>
+
+                            <div class="input-group date">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input disabled type="date" value="2015-03-06" class="form-control pull-right" id="datepicker">
+                          </div>
+                          <label>Terms of Payment:</label>
+                          <input disabled value="NET 30" list="termsofpayment" id="terms" placeholder="Enter terms of payment..." class="form-control" autocomplete="off">
+                          <datalist id="termsofpayment">
+                              <option value="NET 30"></option>
+                              <option value="NET 60"></option>
+                          </datalist>
+                          <label>Account Name:</label>
+                            <input disabled value="ASDAFX" type="text" class="form-control">
+                          <label>Note:</label>
+                            <input disabled value="ASDASD" type="text" class="form-control">
+                          <label>Supplier:</label>
+                          <input disabled value="ACE Hardware" list="listofsuppliers" id="suppliers" placeholder="Enter supplier's name..." class="form-control" autocomplete="off">
+                          <datalist id="listofsuppliers">
+                              <option value="Aluminum Power Marketing Corp."></option>
+                              <option value="Ace Hardware"></option>
+                          </datalist>
+                          <label>Ship to:</label>
+                          <input disabled value="Frabelle Fishing Corp." list="clientlist" id="clients" placeholder="Enter client's name..." class="form-control" autocomplete="off">
+                          <datalist id="clientlist">
+                            <option value="Frabelle Fishing Corp."></option>
+                            <option value="Aluminum Power Marketing Corp."></option>
+                            <option value="Meat Processing Plant"></option>
+                          </datalist>
+                          <center><h4> MATERIALS: </h4></center>
+                          <div class="col-xs-10">
+                          <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Actual Dimension</th>
+                              <th>Quantity</th>
 							  <th>Unit</th>
-							  <th style = "text-align:right;"s>Amount</th>
-							</tr>
-								<tr>
-										<th><center> 1 </center></th>
-										<td> RSB G-40 </td>
-										<td> 20mm x 6m </td>
-										<td> <input style = "text-align:right;" class = "form-control" type = "number" placeholder = "600"> </td>
-										<td> PCS </td>
-										<td> 
-										  <div class = "input-group">
-										  <span class="input-group-addon">PHP</span></i></span><input style = "text-align:right;" type="number" min = 0 class="form-control" placeholder = "35,000">
-										  </div>
-										</td>
-									</tr>
-									
-									<tr>
-										<th><center> 2 </center></th>
-										<td> RSB G-40 </td>
-										<td> 25mm x 6m </td>
-										<td> <input style = "text-align:right;" class = "form-control" type = "number" placeholder = "600"></td>
-										<td> PCS </td>
-										<td> 
-										  <div class = "input-group">
-										  <span class="input-group-addon">PHP</span></i></span><input style = "text-align:right;" type="number" min = 0 class="form-control" placeholder = "35,000">
-										  </div>
-										</td>
-										</tr>
+							  <th>Cost</th>
+							  <th>12% VAT</th>
+							  <th>Total Cost/Unit</th>
+							  <th>Total VAT</th>
+							  <th>Inclusive of VAT</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                              <td>Nylon Chord</td>
+                              <td></td>
+                              <td>12</td>
+							  <td>M</td>
+							  <td>1200.00</td>
+							  <td>144.00</td>
+							  <td>1344.00</td>
+							  <td>1728.00</td>
+							  <td>14400.00</td>
+                            </tr>
+                            <tr>
+                              <td>RSB G-40</td>
+                              <td>20mmx6m</td>
+                              <td>2</td>
+							  <td>M</td>
+							  <td>1200.00</td>
+							  <td>144.00</td>
+							  <td>1344.00</td>
+							  <td>1728.00</td>
+							  <td>14400.00</td>
+                            </tr>
+                            <tr>
+                              <td>RSB G-40</td>
+                              <td>25mmx6m</td>
+                              <td>4</td>
+							  <td>M</td>
+							  <td>1200.00</td>
+							  <td>144.00</td>
+							  <td>1344.00</td>
+							  <td>1728.00</td>
+							  <td>14400.00</td>
+                            </tr>
+                            </tbody>
+                          </table><br>
+						  <table class="table table-bordered table-hover">
+						  <tr>
+							  <th>Grand Total of VAT</th>
+							  <th>Grand Total (Inclusive of VAT)</th>
+                            </tr>
+						  <tr>
+							  <td>5184.00</td>
+							  <td>43200.00</td>
+                            </tr>
 						  </table>
-						  
-				
-						  <div class="row">
-							  <div class="col-xs-4">
-								<b>Prepared by: </b> Kayle Tiu
-							  </div>
-							  
-							</div>
-						  
-						  <div class="row">
-							  <div class="col-xs-4">
-								<b>Checked by: </b> - 
-							  </div>
-							  <div class="col-xs-4">
-								<b>Verified by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Noted by: </b> -
-							  </div>
-							</div>
-							
-							<div class="row">
-							  <div class="col-xs-4">
-								<b>Received by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Verified by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Date Released: </b> -
-							  </div>
-							</div>
-							<hr>
-							<a href = "#"><button type="button" style = "width:200px; margin:5px;" class="btn btn-success pull-right">Adjust Accessories List</button></a><br><br><br>
-							
+						  <a href="recorddeliveryPOlist.html"><button value="1" class="btn btn-success btn-fill">Deliver</button></a>
+						  <a href="recorddeliveryPOlist.html"><button value="2" class="btn btn-warning btn-fill">Pick Up</button></a>
                        </div>
                     </div>
                 </div>    
@@ -605,6 +605,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 
+
 <script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script type = "text/javascript">
@@ -612,6 +613,7 @@ $(document).ready(function(){
 	$('#example2').DataTable();
 });
 </script>
+
 
 </body>
 </html>
