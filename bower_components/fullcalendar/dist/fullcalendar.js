@@ -15586,6 +15586,11 @@ fcViews.listYear = {
 };
 
 ;;
+<<<<<<< HEAD
 
 return FC; // export for Node/CommonJS
+=======
+
+return FC; // export for Node/CommonJS
+>>>>>>> 2ddca0e00309fbb297d27188c4673e3040ac6680
 });
