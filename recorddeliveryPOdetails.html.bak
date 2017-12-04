@@ -3,9 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Edit Material</title>
+  <title>Purchase Order Details</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
+  
+  <link rel ="stylesheet" type = "text/css" href ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link rel ="stylesheet" type = "text/css" href ="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
+  
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -14,8 +19,6 @@
   <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  
-  <link rel="stylesheet" href="dist/css/customs.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
@@ -154,7 +157,7 @@
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">Admin</font>
+          <font face="Open Sans" size="1" color="white">Purchasing</font>
         </div>
         <div class="pull-left info">
           
@@ -163,108 +166,202 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">MAIN NAVIGATION</li>
-        <li class="active treeview">
-          <a href="#">
-            <i class="fa fa-edit"></i> <span>Create</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Raw Materials</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Materials</a></li>
-			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Suppliers</a></li>
-			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Accounts</a></li>
-          </ul>
-        </li>
 		
-		<li class="active treeview">
-          <a href="#">
-            <i class="fa fa-edit"></i> <span>Edit</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+        <li class="header">MAIN NAVIGATION</li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create Suppliers</span>
+            
           </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Raw Materials</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Materials</a></li>
-			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Suppliers</a></li>
-			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Accounts</a></li>
-          </ul>
         </li>
-        
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-male"></i> <span>Create Excel Price Summary</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-hand-pointer-o"></i> <span>Select Supplier for Purchasing</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create List of Needed Materials</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Input Prices of Needed Materials</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create Purchase Order</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Record Delivery Method</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Project Turnover</span>
+            
+          </a>
+        </li>
+      </ul>
+		
     </section>
     <!-- /.sidebar -->
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <div class="box">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h1>
-          Edit Material<br>
-          <small>Edits records of materials</small>
-        </h1>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li class="active">Dashboard</li>
-        </ol>
-      </section>
-  
-      <!-- MAIN CONTENT -->
-      <section class="content">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <div class="col-xs-12">
-              <!-- MATERIAL NAME -->
-                        <div class="col-xs-8 form-group">
-                            <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
-                        </div>
-						<!-- MATERIAL UNIT -->
-                        <div class="col-xs-8 form-group">
-                            <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
-							</select>
+    <!-- Content Header (Page header) -->
+	
+	<div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="box">
+			<section class="content-header">
+			  <h1>
+				  Purchase Order Details
+			  </h1>
+			  <ol class="breadcrumb">
+				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+				<li class="active">Dashboard</li>
+			  </ol>
+			</section>
+                <div class="row">
+                    <div class="col-lg-12">
+                      <div class="col-xs-12"><br>
+                          <label>Project Code:</label>
+                          <input disabled list="projectcodes" id="projects" placeholder="Enter project code..." value="RDF-P043/15V" class="form-control" autocomplete="off">
+                          <datalist id="projectcodes">
+                              <option value="RDF-P043/15V"></option>
+                              <option value="HSSH-P041/16V"></option>
+                          </datalist>
+                          <div class="form-group">
+                            <label>Date Created:</label>
 
-                        </div>
+                            <div class="input-group date">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input disabled value="2015-03-05" type="date" class="form-control pull-right" id="datepicker">
+                          </div>
+                          <label>Monthly Control Number:</label>
+                            <input disabled value="002" type="number" class="form-control">
+                          <div class="form-group">
+                            <label>Delivery Schedule:</label>
 
-					<!-- MATERIAL DIMENSIONS -->	
-
-                        <div class="col-xs-8 form-group">
-                            <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
-							
-							</select>
-
-                        </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
-
-						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
-						
-					<!-- CREATE BUTTON -->
-					<div class="col-xs-8 form-group">
-						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
-					</div>
+                            <div class="input-group date">
+                              <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                              </div>
+                              <input disabled type="date" value="2015-03-06" class="form-control pull-right" id="datepicker">
+                          </div>
+                          <label>Terms of Payment:</label>
+                          <input disabled value="NET 30" list="termsofpayment" id="terms" placeholder="Enter terms of payment..." class="form-control" autocomplete="off">
+                          <datalist id="termsofpayment">
+                              <option value="NET 30"></option>
+                              <option value="NET 60"></option>
+                          </datalist>
+                          <label>Account Name:</label>
+                            <input disabled value="ASDAFX" type="text" class="form-control">
+                          <label>Note:</label>
+                            <input disabled value="ASDASD" type="text" class="form-control">
+                          <label>Supplier:</label>
+                          <input disabled value="ACE Hardware" list="listofsuppliers" id="suppliers" placeholder="Enter supplier's name..." class="form-control" autocomplete="off">
+                          <datalist id="listofsuppliers">
+                              <option value="Aluminum Power Marketing Corp."></option>
+                              <option value="Ace Hardware"></option>
+                          </datalist>
+                          <label>Ship to:</label>
+                          <input disabled value="Frabelle Fishing Corp." list="clientlist" id="clients" placeholder="Enter client's name..." class="form-control" autocomplete="off">
+                          <datalist id="clientlist">
+                            <option value="Frabelle Fishing Corp."></option>
+                            <option value="Aluminum Power Marketing Corp."></option>
+                            <option value="Meat Processing Plant"></option>
+                          </datalist>
+                          <center><h4> MATERIALS: </h4></center>
+                          <div class="col-xs-10">
+                          <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>Actual Dimension</th>
+                              <th>Quantity</th>
+							  <th>Unit</th>
+							  <th>Cost</th>
+							  <th>12% VAT</th>
+							  <th>Total Cost/Unit</th>
+							  <th>Total VAT</th>
+							  <th>Inclusive of VAT</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                              <td>Nylon Chord</td>
+                              <td></td>
+                              <td>12</td>
+							  <td>M</td>
+							  <td>1200.00</td>
+							  <td>144.00</td>
+							  <td>1344.00</td>
+							  <td>1728.00</td>
+							  <td>14400.00</td>
+                            </tr>
+                            <tr>
+                              <td>RSB G-40</td>
+                              <td>20mmx6m</td>
+                              <td>2</td>
+							  <td>M</td>
+							  <td>1200.00</td>
+							  <td>144.00</td>
+							  <td>1344.00</td>
+							  <td>1728.00</td>
+							  <td>14400.00</td>
+                            </tr>
+                            <tr>
+                              <td>RSB G-40</td>
+                              <td>25mmx6m</td>
+                              <td>4</td>
+							  <td>M</td>
+							  <td>1200.00</td>
+							  <td>144.00</td>
+							  <td>1344.00</td>
+							  <td>1728.00</td>
+							  <td>14400.00</td>
+                            </tr>
+                            </tbody>
+                          </table><br>
+						  <table class="table table-bordered table-hover">
+						  <tr>
+							  <th>Grand Total of VAT</th>
+							  <th>Grand Total (Inclusive of VAT)</th>
+                            </tr>
+						  <tr>
+							  <td>5184.00</td>
+							  <td>43200.00</td>
+                            </tr>
+						  </table>
+						  <a href="recorddeliveryPOlist.html"><button value="1" class="btn btn-success btn-fill">Deliver</button></a>
+						  <a href="recorddeliveryPOlist.html"><button value="2" class="btn btn-warning btn-fill">Pick Up</button></a>
+                       </div>
+                    </div>
+                </div>    
             </div>
         </div>
-        <!-- /.row (main row) -->
-  
-      </section>
-	                      </div>
-      <!-- END OF MAIN CONTENT -->
     </div>
   </div>
+  
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -507,5 +604,16 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
+
+<script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script type = "text/javascript">
+$(document).ready(function(){
+	$('#example2').DataTable();
+});
+</script>
+
+
 </body>
 </html>

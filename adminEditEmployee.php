@@ -1,9 +1,132 @@
+<?php
+
+session_start();
+
+require_once('mysql_connect.php');
+
+$query="select * from employee where employeeID = " . $_SESSION['employeeID'];
+$result=mysqli_query($dbc,$query);
+
+$row=mysqli_fetch_array($result,MYSQLI_ASSOC);
+
+$oldEmployeeFirstName = $row['firstName'];
+$oldEmployeeLastName = $row['lastName'];
+$eAccountID = $row['accountID'];
+
+if (isset($_POST['submit'])){
+
+$message=NULL;
+
+//pag walang laman yung productname field sa html ilalagay yung message sa $message
+//na nakalimutan mo mag enter ng product name
+
+//pag may laman ma sstore sa variable $productname yung inenter mong name ng product sa 
+//productname field (dinefine ni sir sa html yung field name as productname)
+
+ if (empty($_POST['firstName'])){
+  $firstName=NULL;
+  $message.='<p>You forgot to enter the first name!';
+ }else
+  $firstName=$_POST['firstName'];
+
+  if (empty($_POST['lastName'])){
+  $lastName=NULL;
+  $message.='<p>You forgot to enter the last name!';
+ }else
+  $lastName=$_POST['lastName'];
+
+  if (empty($_POST['phone'])){
+  $phone=NULL;
+  $message.='<p>You forgot to enter the phone number!';
+ }else
+  $phone=$_POST['phone'];
+
+  if (empty($_POST['emergencyContact'])){
+  $emergencyContact=NULL;
+  $message.='<p>You forgot to enter the emergency contact!';
+ }else
+  $emergencyContact=$_POST['emergencyContact'];
+
+  if (empty($_POST['gender'])){
+  $gender=NULL;
+  $message.='<p>You forgot to enter the gender!';
+ }else
+  $gender=$_POST['gender'];
+
+  if (empty($_POST['homeAddress'])){
+  $homeAddress=NULL;
+  $message.='<p>You forgot to enter the home address!';
+ }else
+  $homeAddress=$_POST['homeAddress'];
+
+  if (empty($_POST['username'])){
+  $username=NULL;
+  $message.='<p>You forgot to enter the username!';
+ }else
+  $username=$_POST['username'];
+
+  if (empty($_POST['password'])){
+  $password=NULL;
+  $message.='<p>You forgot to enter the password!';
+ }else
+  $password=$_POST['password'];
+
+  if (empty($_POST['email'])){
+  $email=NULL;
+  $message.='<p>You forgot to enter the email!';
+ }else
+  $email=$_POST['email'];
+
+  if (empty($_POST['usertypeID'])){
+  $usertypeID=NULL;
+  $message.='<p>You forgot to enter the usertype!';
+ }else
+  $usertypeID=$_POST['usertypeID'];
+
+ //pag wala kang nakalimutan na ienter na field
+if(!isset($message)){
+
+//yung '../mysql_connect.php' yung directory ng mysql_connect.php mo 
+// .. means to go back one level
+require_once('mysql_connect.php');
+//mag sstore ka ng SQL query sa isang variable tapos
+//ipasok mo dun yung values ng bawat variable mo sa form
+//gamit ka {$variable} pag numerical
+//gamit ka '{$variable}' pag string
+//$result is just another variable
+//mysqli_query is a method na kung saan kailangan mo ng 
+//credentials ng db tapos yung papasok mong query
+//pag successful yan gagawa na siya ng record ng product
+//then ininsert ni sir yung values ng bawat variable mo sa form sa $message
+//para lang malaman mo na kung ano yung ininsert mong product record\
+$message="<b><p>Employee: " . $oldEmployeeFirstName . " " . $oldEmployeeLastName . " edited! </b>";
+$query="update employee set firstName = '" . $firstName . "' ,
+		lastName = '" . $lastName . "' , phone = '" . $phone . "' , emergencyContact = '" . $emergencyContact . "' , 
+		gender = '" . $gender . "' , homeAddress = '" . $homeAddress . "' where employeeID = " . $_SESSION['employeeID'];
+$result=mysqli_query($dbc,$query);
+
+$query="update accounts set username = '" . $username . "' ,
+		password = '" . $password . "' , email = '" . $email . "' , usertypeID = '" . $usertypeID . "' 
+		where accountID = " . $eAccountID;
+$result=mysqli_query($dbc,$query);
+
+}
+ 
+
+}/*End of main Submit conditional*/
+
+if (isset($message)){
+ echo '<font color="red">'.$message. '</font>';
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Edit Material</title>
+  <title>Edit Employee</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -204,8 +327,8 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Edit Material<br>
-          <small>Edits records of materials</small>
+          Edit Employee Account<br>
+          <small>Edits accounts of employees</small>
         </h1>
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -214,50 +337,107 @@
       </section>
   
       <!-- MAIN CONTENT -->
-      <section class="content">
+      <section class="content" style="min-height: 750px">
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-xs-12">
-              <!-- MATERIAL NAME -->
-                        <div class="col-xs-8 form-group">
-                            <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
-                        </div>
-						<!-- MATERIAL UNIT -->
-                        <div class="col-xs-8 form-group">
-                            <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
-							</select>
-
-                        </div>
-
-					<!-- MATERIAL DIMENSIONS -->	
-
-                        <div class="col-xs-8 form-group">
-                            <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
-							
-							</select>
-
-                        </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
-
-						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
+				<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+				
+					<?php
 						
-					<!-- CREATE BUTTON -->
-					<div class="col-xs-8 form-group">
-						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
-					</div>
+							if(isset($_GET['submit'])){
+								$_SESSION['employeeID'] = $_GET['submit'];
+							}
+							require_once('mysql_connect.php');
+
+							$query="select * from employee join accounts on employee.accountID = accounts.accountID where employeeID = " . $_SESSION['employeeID'];
+							$result=mysqli_query($dbc,$query);
+							
+							$row=mysqli_fetch_array($result,MYSQLI_ASSOC);
+							
+						?>
+						
+					<!-- EMPLOYEE USER NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Username</label>
+                            <?php echo "<input required name='username' type='text' class='form-control input' id='input1' value='{$row['username']}'>";?>
+                        </div>
+						
+						<!-- EMPLOYEE PASSWORD -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Password</label>
+                            <?php echo "<input required name='password' type='password' class='form-control input' id='input1' value='{$row['password']}'>";?>
+                        </div>
+						 <br><br><br><br>
+						 
+						<!-- EMPLOYEE FIRST NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">First Name</label>
+                            <?php echo "<input required name='firstName' type='text' class='form-control input' id='input1' value='{$row['firstName']}'>";?>
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE LAST NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Last Name</label>
+                            <?php echo "<input required name='lastName' type='text' class='form-control input' id='input1' value='{$row['lastName']}'>";?>
+                        </div><br><br><br><br>
+						<!-- GENDER -->
+							<div class="col-xs-6 form-group">
+								<label>Gender</label>
+								<select required class="form-control" name="gender">
+									<option value="M">Male</option>
+									<option value="F">Female</option>
+								</select>
+							</div>
+						<!-- EMPLOYEE ADDRESS -->
+                        <div class="col-xs-8 form-group">
+                            <label for="input1">Home Address</label>
+                            <?php echo "<input required name='homeAddress' type='text' class='form-control input' id='input1' value='{$row['homeAddress']}'>";?>
+                        </div>
+						<!-- EMPLOYEE EMAIL -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">E-mail</label>
+                            <?php echo "<input required name='email' type='text' class='form-control input' id='input1' value='{$row['email']}'>";?>
+                        </div><br><br><br><br><br><br><br><br><br><br><br><br>
+						<!-- EMPLOYEE TITLE -->
+                        <div class="col-xs-6 form-group">
+								<label>Employee Title</label>
+								<select class="form-control" name="usertypeID">
+									<?php
+										require_once('mysql_connect.php');
+
+										$query="select * from ref_usertype";
+										$result=mysqli_query($dbc,$query);
+										
+										while($row2=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+											echo "<option value={$row2['usertypeID']}>{$row2['usertype']}</option>";
+										}
+									?>
+								</select>
+							</div>
+						<!-- PHONE NUMBER -->
+                        <div class="col-xs-8 form-group">
+                            <label for="input2">Phone Number</label>
+                            <?php echo "<input required name='phone' type='text' class='form-control input' id='input1' value='{$row['phone']}'>";?>
+                        </div>
+						<!-- EMERGENCY CONTACT NUMBER -->
+                        <div class="col-xs-8 form-group">
+                            <label for="input2">Emergency Contact Number</label>
+                            <?php echo "<input required name='emergencyContact' type='text' class='form-control input' id='input1' value='{$row['emergencyContact']}'>";?>
+                        </div>
+						
+						<!-- CREATE BUTTON -->
+						<div class="col-xs-8 form-group">
+							<input type="submit" name="submit">
+							<a href="adminEmployeeList.html"><button>Back</button></a>
+							</div>
+						
+					</form>
+				</div>
+					
             </div>
+			
         </div>
+		
         <!-- /.row (main row) -->
   
       </section>

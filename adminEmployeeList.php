@@ -1,11 +1,32 @@
+<?php
+//lagi ka maglalagay ng session_start(); sa unang line ng <?php mo
+//pati yung require_once('../mysql_connect.php');
+
+session_start();
+
+//pag na click si submit button which is name niya = 'submit' (dinefine ni sir sa html
+//as submit)
+if (isset($_POST['submit'])){
+
+  header("Location: adminEditEmployee.php"); /* Redirect browser */
+	exit();
+ //pag wala kang nakalimutan na ienter na field
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Edit Material</title>
+  <title>AdminLTE 2 | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
+  
+  <link rel ="stylesheet" type = "text/css" href ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link rel ="stylesheet" type = "text/css" href ="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
+  
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -14,8 +35,6 @@
   <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  
-  <link rel="stylesheet" href="dist/css/customs.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
@@ -200,71 +219,82 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <div class="box">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h1>
-          Edit Material<br>
-          <small>Edits records of materials</small>
-        </h1>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li class="active">Dashboard</li>
-        </ol>
-      </section>
-  
-      <!-- MAIN CONTENT -->
-      <section class="content">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <div class="col-xs-12">
-              <!-- MATERIAL NAME -->
-                        <div class="col-xs-8 form-group">
-                            <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
-                        </div>
-						<!-- MATERIAL UNIT -->
-                        <div class="col-xs-8 form-group">
-                            <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
-							</select>
+    <!-- Content Header (Page header) -->
+	
+	<div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="box">
+			<section class="content-header">
+			  <h1><b>
+				Employee List</b><br>
+				<small>Select the employee account</small>
+			  </h1>
+			  <ol class="breadcrumb">
+				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+				<li class="active">Dashboard</li>
+			  </ol>
+			</section>
+                <div class="row">
+                    <div class="col-lg-12">
+					<br>
+                        <div class="col-xs-12">
+						<form style="height: 250px" action="adminEditEmployee.php" method="get">
+                          <table id="example2" class="table table-bordered table-hover">
+						  <div class="col-xs-6 form-group">
+                            <thead>
+                            <tr>
+							  <th>Username</th>
+							  <th>E-mail</th>
+                              <th>First Name</th>
+                              <th>Last Name</th>
+							  <th>Gender</th>
+							  <th>Phone Number</th>
+							  <th>Emergency Contact</th>
+							  <th>Home Address</th>
+							  <th>Title</th>
+							  <th>Option</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+								require_once('mysql_connect.php');
 
-                        </div>
-
-					<!-- MATERIAL DIMENSIONS -->	
-
-                        <div class="col-xs-8 form-group">
-                            <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
-							
-							</select>
-
-                        </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
-
-						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
-						
-					<!-- CREATE BUTTON -->
-					<div class="col-xs-8 form-group">
-						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
-					</div>
+								$query="select * from employee join accounts on employee.accountID = accounts.accountID join ref_usertype on accounts.usertypeID = ref_usertype.usertypeID";
+								$result=mysqli_query($dbc,$query);
+								
+								
+								while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+									echo "<tr>
+									<td>{$row['username']}</td>
+									<td>{$row['email']}</td>
+									<td>{$row['firstName']}</td>
+									<td>{$row['lastName']}</td>
+									<td>{$row['gender']}</td>
+									<td>{$row['phone']}</td>
+									<td>{$row['emergencyContact']}</td>
+									<td>{$row['homeAddress']}</td>
+									<td>{$row['usertype']}</td>
+									<td><button value={$row['employeeID']} type='submit' name='submit'>EDIT</td>
+									
+									</tr>
+									
+									
+									";
+									
+									
+								}
+							?>
+                            </tbody>
+                          </div>
+						  </form>
+                       </div>
+                    </div>
+                </div>    
             </div>
         </div>
-        <!-- /.row (main row) -->
-  
-      </section>
-	                      </div>
-      <!-- END OF MAIN CONTENT -->
     </div>
   </div>
+  
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -507,5 +537,16 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
+
+<script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script type = "text/javascript">
+$(document).ready(function(){
+	$('#example2').DataTable();
+});
+</script>
+
+
 </body>
 </html>

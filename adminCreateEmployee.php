@@ -1,9 +1,122 @@
+<?php
+//lagi ka maglalagay ng session_start(); sa unang line ng <?php mo
+//pati yung require_once('../mysql_connect.php');
+
+session_start();
+
+//pag na click si submit button which is name niya = 'submit' (dinefine ni sir sa html
+//as submit)
+if (isset($_POST['submit'])){
+
+//nagdeclare lang siya ng message variable for later
+$message=NULL;
+
+//pag walang laman yung productname field sa html ilalagay yung message sa $message
+//na nakalimutan mo mag enter ng product name
+
+//pag may laman ma sstore sa variable $productname yung inenter mong name ng product sa 
+//productname field (dinefine ni sir sa html yung field name as productname)
+ if (empty($_POST['firstName'])){
+  $firstName=NULL;
+  $message.='<p>You forgot to enter the first name!';
+ }else
+  $firstName=$_POST['firstName'];
+
+ if (empty($_POST['lastName'])){
+  $lastName=NULL;
+  $message.='<p>You forgot to enter the name of the last name!';
+ }else
+  $lastName=$_POST['lastName'];
+
+ if (empty($_POST['phone'])){
+  $phone=NULL;
+  $message.='<p>You forgot to enter the phone number!';
+ }else
+  $phone=$_POST['phone'];
+
+  if (empty($_POST['emergencyContact'])){
+  $emergencyContact=NULL;
+  $message.='<p>You forgot to enter the emergency contact number!';
+ }else
+  $emergencyContact=$_POST['emergencyContact'];
+
+  $gender=$_POST['gender'];
+  
+  if (empty($_POST['homeAddress'])){
+  $homeAddress=NULL;
+  $message.='<p>You forgot to enter the home address!';
+ }else
+  $homeAddress=$_POST['homeAddress'];
+  
+  if (empty($_POST['username'])){
+  $username=NULL;
+  $message.='<p>You forgot to enter the username!';
+ }else
+  $username=$_POST['username'];
+
+if (empty($_POST['password'])){
+  $password=NULL;
+  $message.='<p>You forgot to enter the password!';
+ }else
+  $password=$_POST['password'];
+
+if (empty($_POST['email'])){
+  $email=NULL;
+  $message.='<p>You forgot to enter the e-mail address!';
+ }else
+  $email=$_POST['email'];
+
+if (empty($_POST['usertypeID'])){
+  $usertypeID=NULL;
+  $message.='<p>You forgot to enter the user type!';
+ }else
+  $usertypeID=$_POST['usertypeID'];
+ //pag wala kang nakalimutan na ienter na field
+if(!isset($message)){
+
+//yung '../mysql_connect.php' yung directory ng mysql_connect.php mo 
+// .. means to go back one level
+require_once('mysql_connect.php');
+//mag sstore ka ng SQL query sa isang variable tapos
+//ipasok mo dun yung values ng bawat variable mo sa form
+//gamit ka {$variable} pag numerical
+//gamit ka '{$variable}' pag string
+//$result is just another variable
+//mysqli_query is a method na kung saan kailangan mo ng 
+//credentials ng db tapos yung papasok mong query
+//pag successful yan gagawa na siya ng record ng product
+//then ininsert ni sir yung values ng bawat variable mo sa form sa $message
+//para lang malaman mo na kung ano yung ininsert mong product record
+$query="insert into accounts (username,password,email, usertypeID, statusID) values ('{$username}','{$password}','{$email}', {$usertypeID}, 1)";
+$result=mysqli_query($dbc,$query);
+
+$query="select accountID from accounts where username = '" . $username . "'";
+$result=mysqli_query($dbc,$query);
+$row=mysqli_fetch_array($result,MYSQLI_ASSOC);
+$accountID = $row['accountID'];
+
+$query="insert into employee (firstName,lastName,phone, emergencyContact, gender, homeAddress, accountID) values ('{$firstName}','{$lastName}','{$phone}', '{$emergencyContact}', '{$gender}', '{$homeAddress}', {$accountID})";
+$result=mysqli_query($dbc,$query);
+
+$message="<b><p>Employee: {$firstName} {$lastName} added! </b>";
+
+}
+ 
+
+}/*End of main Submit conditional*/
+
+if (isset($message)){
+ echo '<font color="red">'.$message. '</font>';
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Edit Material</title>
+  <title>Create Employee Account</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -204,8 +317,8 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Edit Material<br>
-          <small>Edits records of materials</small>
+          Create Employee Account<br>
+          <small>Creates accounts of employees</small>
         </h1>
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -218,44 +331,82 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-xs-12">
-              <!-- MATERIAL NAME -->
-                        <div class="col-xs-8 form-group">
-                            <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
-                        </div>
-						<!-- MATERIAL UNIT -->
-                        <div class="col-xs-8 form-group">
-                            <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
+			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+					<!-- EMPLOYEE USER NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Username</label>
+                            <input required name="username" type="text" class="form-control input" id="input1" placeholder="Enter user name...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE PASSWORD -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Password</label>
+                            <input required name="password" type="password" class="form-control input" id="input1" placeholder="Enter password...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE FIRST NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">First Name</label>
+                            <input required name="firstName" type="text" class="form-control input" id="input1" placeholder="Enter first name...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE LAST NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Last Name</label>
+                            <input required name="lastName" type="text" class="form-control input" id="input1" placeholder="Enter last name...">
+                        </div><br><br><br><br>
+						<!-- GENDER -->
+							<div class="col-xs-6 form-group">
+								<label>Gender</label>
+								<select class="form-control" name="gender">
+									<option value="M">Male</option>
+									<option value="F">Female</option>
+								</select>
+							</div><br><br><br><br>
+						<!-- EMPLOYEE ADDRESS -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Home Address</label>
+                            <input required name="homeAddress" type="text" class="form-control input" id="input1" placeholder="Enter home address...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE EMAIL -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">E-mail</label>
+                            <input required name="email" type="text" class="form-control input" id="input1" placeholder="Enter e-mail address...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE TITLE -->
+                        <div class="col-xs-6 form-group">
+                            <label>Title</label>
+							<select class="form-control" name="usertypeID">
+							<?php
+								require_once('mysql_connect.php');
+
+								$query="select * from ref_usertype";
+								$result=mysqli_query($dbc,$query);
+								
+								while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+									echo "<option value={$row['usertypeID']}>{$row['usertype']}</option>";
+								}
+							?>
 							</select>
-
-                        </div>
-
-					<!-- MATERIAL DIMENSIONS -->	
-
-                        <div class="col-xs-8 form-group">
-                            <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
 							
-							</select>
-
-                        </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
-
-						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
+                        <br>
+							<a href="adminCreateUsertype.php"><button  type="button" class="btn btn-success btn-fill" >ADD TITLE</button></a><br><br><br><br>
+						</div><br><br><br><br><br><br><br><br><br><br>
+						<!-- PHONE NUMBER -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input2">Phone Number</label>
+                            <input required name="phone" type="text" class="form-control input" id="input2" placeholder="Enter phone number...">
+                        </div><br><br><br><br>
+						<!-- EMERGENCY CONTACT NUMBER -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input2">Emergency Contact Number</label>
+                            <input required name="emergencyContact" type="text" class="form-control input" id="input2" placeholder="Enter emergency contact number...">
+                        </div>
+                    
 						
 					<!-- CREATE BUTTON -->
 					<div class="col-xs-8 form-group">
 						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
 					</div>
+					</form>
+				</div>
             </div>
         </div>
         <!-- /.row (main row) -->
