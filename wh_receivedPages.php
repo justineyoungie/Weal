@@ -1,9 +1,13 @@
+<?php
+    session_start();
+    require_once('mysql_connect.php');
+?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Purchase Order Details</title>
+  <title>Received Pages</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
@@ -157,7 +161,7 @@
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">Purchasing</font>
+          <font face="Open Sans" size="1" color="white">Admin</font>
         </div>
         <div class="pull-left info">
           
@@ -166,58 +170,176 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-		
         <li class="header">MAIN NAVIGATION</li>
-		<li>
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Layout Options</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">4</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
+            <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
+            <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
+          </ul>
+        </li>
+        <li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Suppliers</span>
-            
+            <i class="fa fa-th"></i> <span>Widgets</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-green">new</small>
+            </span>
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-male"></i> <span>Create Excel Price Summary</span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pie-chart"></i>
+            <span>Charts</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
+            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
+            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
+            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>UI Elements</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
+            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
+            <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
+            <li><a href="pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
+            <li><a href="pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
+            <li><a href="pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i> <span>Forms</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
+            <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
+            <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-table"></i> <span>Tables</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
+            <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Data tables</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="pages/calendar.html">
+            <i class="fa fa-calendar"></i> <span>Calendar</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-red">3</small>
+              <small class="label pull-right bg-blue">17</small>
+            </span>
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-hand-pointer-o"></i> <span>Select Supplier for Purchasing</span>
-            
+        <li>
+          <a href="pages/mailbox/mailbox.html">
+            <i class="fa fa-envelope"></i> <span>Mailbox</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-yellow">12</small>
+              <small class="label pull-right bg-green">16</small>
+              <small class="label pull-right bg-red">5</small>
+            </span>
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create List of Needed Materials</span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-folder"></i> <span>Examples</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
           </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
+            <li><a href="pages/examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>
+            <li><a href="pages/examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
+            <li><a href="pages/examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
+            <li><a href="pages/examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
+            <li><a href="pages/examples/404.html"><i class="fa fa-circle-o"></i> 404 Error</a></li>
+            <li><a href="pages/examples/500.html"><i class="fa fa-circle-o"></i> 500 Error</a></li>
+            <li><a href="pages/examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
+            <li><a href="pages/examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
+          </ul>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Input Prices of Needed Materials</span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-share"></i> <span>Multilevel</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
           </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+            <li class="treeview">
+              <a href="#"><i class="fa fa-circle-o"></i> Level One
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                <li class="treeview">
+                  <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+          </ul>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Purchase Order</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Record Delivery Method</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Project Turnover</span>
-            
-          </a>
-        </li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
+        <li class="header">LABELS</li>
+        <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
+        <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
+        <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
       </ul>
-		
     </section>
     <!-- /.sidebar -->
   </aside>
@@ -230,133 +352,113 @@
         <div class="container-fluid">
             <div class="box">
 			<section class="content-header">
-			  <h1>
-				  Purchase Order Details
-			  </h1>
+        <h1>Purchase Orders</h1>
 			  <ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
 				<li class="active">Dashboard</li>
 			  </ol>
 			</section>
-                <div class="row">
-                    <div class="col-lg-12">
-                      <div class="col-xs-12"><br>
-                          <label>Project Code:</label>
-                          <input disabled list="projectcodes" id="projects" placeholder="Enter project code..." value="RDF-P043/15V" class="form-control" autocomplete="off">
-                          <datalist id="projectcodes">
-                              <option value="RDF-P043/15V"></option>
-                              <option value="HSSH-P041/16V"></option>
-                          </datalist>
-                          <div class="form-group">
-                            <label>Date Created:</label>
-
-                            <div class="input-group date">
-                              <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
+                <!-- Change form action to BOQ Link Later on -->
+                <form method="post">
+                    <div class="row">
+                        <div class="col-lg-12">                          
+                          <div class="col-xs-12">
+                              <div class="row">
+                                <?php
+                                  if (isset($_POST['Receive'])){
+                                    $poNumber = $_POST['Receive'];
+                                    $query =    "
+                                                UPDATE purchaseorder SET statusID = 12 WHERE poNumber = {$poNumber}
+                                                ";
+                                    $result=mysqli_query($dbc,$query);
+                                    if (!$result) {
+                                        printf("Error: %s\n", mysqli_error($dbc));
+                                        exit();
+                                    }
+                                    $query =    "
+                                                SELECT *
+                                                FROM purchaseorder po
+                                                JOIN podetails pod ON po.poNumber = pod.poNumber
+                                                WHERE po.poNumber = {$poNumber}
+                                                AND po.natureOfDelivery = 'Warehouse'
+                                                ";
+                                    $result=mysqli_query($dbc,$query);
+                                    if (!$result) {
+                                        printf("Error: %s\n", mysqli_error($dbc));
+                                        exit();
+                                    }
+                                    while ($row=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                                        $query2 = "UPDATE inventory SET quantity = (quantity + {$row['quantity']}) WHERE materialID = {$row['materialID']}";
+                                        $result2=mysqli_query($dbc,$query2);
+                                        if (!$result2) {
+                                            printf("Error: %s\n", mysqli_error($dbc));
+                                            exit();
+                                        }
+                                    }
+                                  }
+                                ?>
+                                  <form method="post">
+                                      <?php
+                                      //statusID for purchased or for created 
+                                        $query ="
+                                                SELECT *
+                                                FROM purchaseorder po
+                                                WHERE statusID = 4
+                                                ";
+                                        $result=mysqli_query($dbc,$query);
+                                        if (!$result) {
+                                            printf("Error: %s\n", mysqli_error($dbc));
+                                            exit();
+                                        }
+                                        while ($row=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                                            $poID = $row['poNumber'];
+                                            echo "<h3>Purchase Order Number: ";
+                                                echo $row['poNumber'];
+                                            echo "</h3>";
+                                            echo "<table class='table'>";
+                                            echo "<thead>";
+                                                echo "<tr>";
+                                                    echo "<th>Material Name</th>";
+                                                    echo "<th>Actual Dimension</th>";
+                                                    echo "<th>Quantity Ordered</th>";
+                                                echo "<tr>";
+                                            echo "</thead>";
+                                            echo "<tbody>";
+                                                    $query2 =   "
+                                                                SELECT * 
+                                                                FROM podetails pod
+                                                                JOIN materials m ON pod.materialID = m.materialID
+                                                                WHERE pod.poNumber = {$poID}
+                                                                ";
+                                                    $result2=mysqli_query($dbc,$query2);
+                                                    if (!$result2) {
+                                                        printf("Error: %s\n", mysqli_error($dbc));
+                                                        exit();
+                                                    }
+                                                    while ($row=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+                                                    echo "<tr>";
+                                                        echo "<td>";
+                                                            echo $row['materialName'];
+                                                        echo "</td>";
+                                                        echo "<td>";
+                                                            echo $row['actualDimension'];
+                                                        echo "</td>";
+                                                        echo "<td>";
+                                                            echo $row['quantity'];
+                                                        echo "</td>";
+                                                    echo "</tr>";
+                                                    }
+                                            echo "</tbody>";
+                                            echo "</table>";
+                                            echo "<button type='submit' class='btn btn-success' value='{$poID}' name='Receive'>Receive</button>";
+                                        }
+                                      ?>
+                                  </form>
                               </div>
-                              <input disabled value="2015-03-05" type="date" class="form-control pull-right" id="datepicker">
-                          </div>
-                          <label>Monthly Control Number:</label>
-                            <input disabled value="002" type="number" class="form-control">
-                          <div class="form-group">
-                            <label>Delivery Schedule:</label>
-
-                            <div class="input-group date">
-                              <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                              </div>
-                              <input disabled type="date" value="2015-03-06" class="form-control pull-right" id="datepicker">
-                          </div>
-                          <label>Terms of Payment:</label>
-                          <input disabled value="NET 30" list="termsofpayment" id="terms" placeholder="Enter terms of payment..." class="form-control" autocomplete="off">
-                          <datalist id="termsofpayment">
-                              <option value="NET 30"></option>
-                              <option value="NET 60"></option>
-                          </datalist>
-                          <label>Account Name:</label>
-                            <input disabled value="ASDAFX" type="text" class="form-control">
-                          <label>Note:</label>
-                            <input disabled value="ASDASD" type="text" class="form-control">
-                          <label>Supplier:</label>
-                          <input disabled value="ACE Hardware" list="listofsuppliers" id="suppliers" placeholder="Enter supplier's name..." class="form-control" autocomplete="off">
-                          <datalist id="listofsuppliers">
-                              <option value="Aluminum Power Marketing Corp."></option>
-                              <option value="Ace Hardware"></option>
-                          </datalist>
-                          <label>Ship to:</label>
-                          <input disabled value="Frabelle Fishing Corp." list="clientlist" id="clients" placeholder="Enter client's name..." class="form-control" autocomplete="off">
-                          <datalist id="clientlist">
-                            <option value="Frabelle Fishing Corp."></option>
-                            <option value="Aluminum Power Marketing Corp."></option>
-                            <option value="Meat Processing Plant"></option>
-                          </datalist>
-                          <center><h4> MATERIALS: </h4></center>
-                          <div class="col-xs-10">
-                          <table id="example2" class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                              <th>Name</th>
-                              <th>Actual Dimension</th>
-                              <th>Quantity</th>
-							  <th>Unit</th>
-							  <th>Cost</th>
-							  <th>12% VAT</th>
-							  <th>Total Cost/Unit</th>
-							  <th>Total VAT</th>
-							  <th>Inclusive of VAT</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                              <td>Nylon Chord</td>
-                              <td></td>
-                              <td>12</td>
-							  <td>M</td>
-							  <td>1200.00</td>
-							  <td>144.00</td>
-							  <td>1344.00</td>
-							  <td>1728.00</td>
-							  <td>14400.00</td>
-                            </tr>
-                            <tr>
-                              <td>RSB G-40</td>
-                              <td>20mmx6m</td>
-                              <td>2</td>
-							  <td>M</td>
-							  <td>1200.00</td>
-							  <td>144.00</td>
-							  <td>1344.00</td>
-							  <td>1728.00</td>
-							  <td>14400.00</td>
-                            </tr>
-                            <tr>
-                              <td>RSB G-40</td>
-                              <td>25mmx6m</td>
-                              <td>4</td>
-							  <td>M</td>
-							  <td>1200.00</td>
-							  <td>144.00</td>
-							  <td>1344.00</td>
-							  <td>1728.00</td>
-							  <td>14400.00</td>
-                            </tr>
-                            </tbody>
-                          </table><br>
-						  <table class="table table-bordered table-hover">
-						  <tr>
-							  <th>Grand Total of VAT</th>
-							  <th>Grand Total (Inclusive of VAT)</th>
-                            </tr>
-						  <tr>
-							  <td>5184.00</td>
-							  <td>43200.00</td>
-                            </tr>
-						  </table>
-						  <a href="recorddeliveryPOlist.html"><button value="1" class="btn btn-success btn-fill">Deliver</button></a>
-						  <a href="recorddeliveryPOlist.html"><button value="2" class="btn btn-warning btn-fill">Pick Up</button></a>
-                       </div>
-                    </div>
-                </div>    
+                           </div>
+                        </div>
+                    </div>    
+                </form>
             </div>
         </div>
     </div>
@@ -613,7 +715,13 @@ $(document).ready(function(){
 	$('#example2').DataTable();
 });
 </script>
-
+<script type="text/javascript">
+$("#submitNTP").click(function() {
+  var smth = $('#accessorieslist option[value="' + $('#al').val() + '"]').attr('data-id');
+  document.getElementById('accessorieslist-hidden').value = smth;
+  document.getElementById('passMaterials').submit();
+});
+</script>
 
 </body>
 </html>
