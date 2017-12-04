@@ -2,6 +2,8 @@
 <?php
 require_once("mysql_connect.php");
 session_start();
+$_SESSION['accountID'] = 10000001;
+
 $dont = true;
 if (isset($_GET['pc'])){
 	$projectCode = $_GET['pc'];
@@ -76,6 +78,7 @@ if (isset($_POST['deleteMat'])){
 	$dont = false;
 }
 
+//When editing quantity of materials
 if (isset($_POST['editQty'])){
 	$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
 	$result = mysqli_query($dbc, $query);
@@ -112,7 +115,7 @@ if (isset($_POST['create'])){
 				$status = true;
 			}
 			
-			$query1 = "UPDATE `phases` SET statusID = '4' WHERE phaseID = '".$phaseID."'";
+			$query1 = "UPDATE `phases` SET dateCreated = NOW(), statusID = '4', preparedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
 			$result1 = mysqli_query($dbc, $query1);
 			if ($result1){
 				$status = true;

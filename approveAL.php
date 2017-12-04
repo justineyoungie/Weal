@@ -16,7 +16,7 @@ if (isset($_GET['p'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Create Accessories List</title>
+  <title>Approve Accessories List</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
@@ -256,7 +256,7 @@ if (isset($_GET['p'])){
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Create Accessories List</b><br>
+				Approve Accessories List</b><br>
 				<br>
 			  </h1>
 			  <ol class="breadcrumb">
@@ -264,12 +264,6 @@ if (isset($_GET['p'])){
 				<li class="active">Dashboard</li>
 			  </ol>
 			</section>
-			
-			<div class="alert alert-success alert-dismissable">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<h4><i class="icon fa fa-check"></i> SUCCESS!</h4>
-				You have successfully created an Accessories List.
-			</div>
                 <div class="row">
                     <div class="col-lg-12">
 					<br>
@@ -278,17 +272,18 @@ if (isset($_GET['p'])){
 								<div class="col-xs-6">
 									<label><h4><b>Project Code: <?php echo $projectCode; ?> </b></h4></label>
 								</div>
-							  <div class="col-xs-6">
-								<h4><b>Accessories List Name: </b> 
-								<?php
-									$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
-									$result = mysqli_query($dbc, $query);
-									$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-									echo $row['phaseName'];
-								?>
-								</h4>
-							  </div>
+								<div class="col-xs-6">
+									<h4><b>Accessories List Name: </b> 
+									<?php
+										$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
+										$result = mysqli_query($dbc, $query);
+										$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+										echo $row['phaseName'];
+									?>
+									</h4>
+								</div>
 							</div>
+							
 							<div class="row">
 							  <div class="col-xs-6">
 								<b>Project Name: </b> 
@@ -319,7 +314,8 @@ if (isset($_GET['p'])){
 								<b>Date Created: </b> <?php echo $row['dateCreated']; ?>
 							  </div>
 							</div>
-
+							
+							
 							<br>
 							
 							<!-- Per subphase -->
@@ -379,9 +375,10 @@ if (isset($_GET['p'])){
 							}
 							?></form>
 							<a href = "#.html"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
-							
+							<br>
 							<br>
 							<hr>
+							
                        </div>
                     </div>
                 </div>    
