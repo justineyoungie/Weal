@@ -3,94 +3,15 @@
 require_once("mysql_connect.php");
 session_start();
 $dont = true;
-$_SESSION['accountID'] = 10000002;
 if (isset($_GET['pc'])){
 	$projectCode = $_GET['pc'];
 }
 
 if (isset($_GET['p'])){
 	$phaseID = $_GET['p'];
-	$notYet = true;
-	
-	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
-	$result = mysqli_query($dbc, $query);
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	
-	if ($row['preparedBy'] != $_SESSION['accountID']){
-		if (!empty($row['checkedBy'])){
-			if ($row['checkedBy'] == $_SESSION['accountID']){
-				$notYet = false;
-			}
-		}else if (!empty($row['verifiedBy'])){
-			if ($row['verifiedBy'] == $_SESSION['accountID']){
-				$notYet = false;
-			}
-		}else if (!empty($row['approvedBy'])){
-			if ($row['approvedBy'] == $_SESSION['accountID']){
-				$notYet = false;
-			}
-		}else if (!empty($row['noteBy'])){
-			if ($row['noteBy'] == $_SESSION['accountID']){
-				$notYet = false;
-			}
-		}
-	}else{
-		$notYet = false;
-	}
-	
 }
 
-if (isset($_GET['st'])){
-	$stat = $_GET['st'];
-	if ($stat == "a"){
-		$message = '<div class="alert alert-success alert-dismissable">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					<h4><i class="icon fa fa-check"></i> Accessories List Approved!</h4>
-					You have successfully approved an Accessories List.
-				</div>';
-	}else{
-		$message = '<div class="alert alert-danger alert-dismissable">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					<h4><i class="icon fa fa-ban"></i>Disapproved Accessories List!</h4>
-						Accessories List Disapproved!
-					</div>';
-	}
-}
 
-if (isset($_POST['disapproved'])){
-	$query1 = "UPDATE `phases` SET reason = '".$_POST['reason']."', statusID = '6', disapprovedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
-	$result1 = mysqli_query($dbc, $query1);
-	if ($result1){
-		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?pc=".$projectCode."&p=".$phaseID."&st=d");
-	}
-}
-
-if (isset($_POST['approved'])){
-	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
-	$result = mysqli_query($dbc, $query);
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	
-	if (empty($row['checkedBy'])){
-		$query1 = "UPDATE `phases` SET checkedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
-		$result1 = mysqli_query($dbc, $query1);
-	}else if (empty($row['verifiedBy'])){
-		$query1 = "UPDATE `phases` SET verifiedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
-		$result1 = mysqli_query($dbc, $query1);
-	}else if (empty($row['approvedBy'])){
-		$query1 = "UPDATE `phases` SET approvedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
-		$result1 = mysqli_query($dbc, $query1);
-	}else if (empty($row['noteBy'])){
-		$query1 = "UPDATE `phases` SET noteBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
-		$result1 = mysqli_query($dbc, $query1);
-		
-		$queryU = "UPDATE `phases` SET statusID = '5' WHERE phaseID = '".$phaseID."'";
-		$resultU = mysqli_query($dbc, $queryU);
-	}
-	
-	if ($result1){
-		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?pc=".$projectCode."&p=".$phaseID."&st=a");
-	}
-}
 
 ?>
 <html>
@@ -248,9 +169,9 @@ if (isset($_POST['approved'])){
     <section class="sidebar">
       <!-- Sidebar user panel -->
       <div class="user-panel">
-        <div class="pull-left image">>
-          <font face="Open Sans" size="1" color="white">Admin</font>
+        <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
+          <font face="Open Sans" size="1" color="white">Admin</font>
         </div>
         <div class="pull-left info">
           
@@ -345,9 +266,6 @@ if (isset($_POST['approved'])){
 				<li class="active">Dashboard</li>
 			  </ol>
 			</section>
-			<?php if (isset($message)){
-				echo $message;
-			}?>
                 <div class="row">
                     <div class="col-lg-12">
 					<br>
@@ -457,30 +375,9 @@ if (isset($_POST['approved'])){
 									</tbody>
 								</table>';
 							}
-							
-							$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
-							$result = mysqli_query($dbc, $query);
-							$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-							if ($row['statusID'] == 5 || $row['statusID'] == 6){
-								$stas = true;
-							}else{
-								$stas = false;
-							}
-							if (!isset($stat) && !$stas && $notYet){
-								echo '
-								<form action = "approveAL.php?pc='.$projectCode.'&p='.$phaseID.'" method = "post">
-								<input type="submit" name = "approved" style = "width:150px; margin:5px;" class="btn btn-success pull-right" value = "Approve">
-								</form>
-								<button type="button" style = "width:150px; margin:5px;" class="btn btn-danger pull-right" data-toggle="modal" data-target="#modal-danger">
-									Disapprove
-								</button>';
-							}
-							else{
-								echo '<a href = "#.html"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
-								';
-							}
 							?>
-							<br>
+							<a href = "#.html"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
+							
 							<br>
 							<hr>
 							
