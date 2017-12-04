@@ -1,9 +1,103 @@
 <!DOCTYPE html>
+<?php
+require_once("mysql_connect.php");
+session_start();
+$dont = true;
+$_SESSION['accountID'] = 10000002;
+if (isset($_GET['pc'])){
+	$projectCode = $_GET['pc'];
+}
+
+if (isset($_GET['p'])){
+	$phaseID = $_GET['p'];
+	$notYet = true;
+	
+	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if ($row['preparedBy'] != $_SESSION['accountID']){
+		if (!empty($row['checkedBy'])){
+			if ($row['checkedBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}else if (!empty($row['verifiedBy'])){
+			if ($row['verifiedBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}else if (!empty($row['approvedBy'])){
+			if ($row['approvedBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}else if (!empty($row['noteBy'])){
+			if ($row['noteBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}
+	}else{
+		$notYet = false;
+	}
+	
+}
+
+if (isset($_GET['st'])){
+	$stat = $_GET['st'];
+	if ($stat == "a"){
+		$message = '<div class="alert alert-success alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<h4><i class="icon fa fa-check"></i> Accessories List Approved!</h4>
+					You have successfully approved an Accessories List.
+				</div>';
+	}else{
+		$message = '<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<h4><i class="icon fa fa-ban"></i>Disapproved Accessories List!</h4>
+						Accessories List Disapproved!
+					</div>';
+	}
+}
+
+if (isset($_POST['disapproved'])){
+	$query1 = "UPDATE `phases` SET reason = '".$_POST['reason']."', statusID = '6', disapprovedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
+	$result1 = mysqli_query($dbc, $query1);
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?pc=".$projectCode."&p=".$phaseID."&st=d");
+	}
+}
+
+if (isset($_POST['approved'])){
+	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['checkedBy'])){
+		$query1 = "UPDATE `phases` SET checkedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
+		$result1 = mysqli_query($dbc, $query1);
+	}else if (empty($row['verifiedBy'])){
+		$query1 = "UPDATE `phases` SET verifiedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
+		$result1 = mysqli_query($dbc, $query1);
+	}else if (empty($row['approvedBy'])){
+		$query1 = "UPDATE `phases` SET approvedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
+		$result1 = mysqli_query($dbc, $query1);
+	}else if (empty($row['noteBy'])){
+		$query1 = "UPDATE `phases` SET noteBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
+		$result1 = mysqli_query($dbc, $query1);
+		
+		$queryU = "UPDATE `phases` SET statusID = '5' WHERE phaseID = '".$phaseID."'";
+		$resultU = mysqli_query($dbc, $queryU);
+	}
+	
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?pc=".$projectCode."&p=".$phaseID."&st=a");
+	}
+}
+
+?>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Create Accessories List</title>
+  <title>Approve Accessories List</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
@@ -154,9 +248,9 @@
     <section class="sidebar">
       <!-- Sidebar user panel -->
       <div class="user-panel">
-        <div class="pull-left image">
-          <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
+        <div class="pull-left image">>
           <font face="Open Sans" size="1" color="white">Admin</font>
+          <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
         </div>
         <div class="pull-left info">
           
@@ -167,20 +261,20 @@
       <ul class="sidebar-menu" data-widget="tree">
 		
         <li class="header">MAIN NAVIGATION</li>
-		<li class="active treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Bill of Materials</span>
             
           </a>
         </li>
 
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Accessories List <b><font size="3">(AL)</b></font></span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Adjust AL</span>
             
@@ -192,37 +286,37 @@
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-check"></i> <span>Approve AL</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Requisition Slip <b><font size="3">(RS)</b></font></span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-clone"></i> <span>Compare AL with RS</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-check"></i> <span>Verify Purchase Order</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Whereabouts Slip</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Transfer Request</span>
             
@@ -239,110 +333,156 @@
 	
 	<div id="page-wrapper">
         <div class="container-fluid">
-			<br><div class="callout callout-success">
-			<h4>SUCCESS!</h4>
-			You have successfully created an Accessories List.
-			</div>
+		<?php if (isset($show)) echo $show; ?>
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Accessories List</b><br>
-				<small> Write Description Here </small>
+				Approve Accessories List</b><br>
+				<br>
 			  </h1>
 			  <ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
 				<li class="active">Dashboard</li>
 			  </ol>
 			</section>
+			<?php if (isset($message)){
+				echo $message;
+			}?>
                 <div class="row">
                     <div class="col-lg-12">
 					<br>
                         <div class="col-xs-12">
-							<label><h4><b>Project Code: JFC-P124/17</b></h4></label>
-							<label class = "col-xs-4 pull-right"><h4><b>Type:</b> CWAL </h4></label>
+							<div class="row">
+								<div class="col-xs-6">
+									<label><h4><b>Project Code: <?php echo $projectCode; ?> </b></h4></label>
+								</div>
+								<div class="col-xs-6">
+									<h4><b>Accessories List Name: </b> 
+									<?php
+										$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
+										$result = mysqli_query($dbc, $query);
+										$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+										echo $row['phaseName'];
+									?>
+									</h4>
+								</div>
+							</div>
 							
 							<div class="row">
-							
-							  <div class="col-xs-8">
-							  <b>Accessories List Name: </b> CWAL - Footing </div>
+							  <div class="col-xs-6">
+								<b>Project Name: </b> 
+								<?php 
+								$queryP = "SELECT * FROM projects WHERE projectCode = '".$projectCode."';";
+								$resultP = mysqli_query($dbc, $queryP);
+								$rowP = mysqli_fetch_array($resultP, MYSQLI_ASSOC);
+								
+								echo $rowP['projectName']; ?>
+							  </div>
+							  <div class="col-xs-6">
+								<b>Location: </b> <?php echo $rowP['whLocation']; ?>
+							  </div>
 							</div>
+							
 							<div class="row">
-							  <div class="col-xs-8">
-								<b>Project Name: </b> Freshline - Beef Processing Plant
-							  </div>
-							  <div class="col-xs-4">
-								<b>Location: </b> Porac, Pampanga
-							  </div>
-							</div>
-							
-							
-							<table class = "table table-striped table-bordered" style = "width:100%">
-							<tr>
-							  <th>Items</th>
-							  <th>Materials</th>
-							  <th>Actual Dimension</th>
-							  <th style = "text-align:right;">Quantity</th>
-							  <th>Unit</th>
-							  <th style = "text-align:right;">Stock</th>
-							  <th style = "text-align:right;">Buy</th>
-							  <th style = "text-align:right;">Amount</th>
-							</tr>
-								<tr>
-										<th><center> 1 </center></th>
-										<td> RSB G-40 </td>
-										<td> 20mm x 6m </td>
-										<td style = "text-align:right;"> 600 </td>
-										<td> PCS </td>
-										<td style = "text-align:right;"> 450 </td>
-										<td style = "text-align:right;"> 150 </td>
-										<td style = "text-align:right;"> - </td>
-									</tr>
+							  <div class="col-xs-6">
+								<b>Prepared by: </b> 
+								<?php 
+									$queryE = "SELECT * FROM employee WHERE accountID = '".$row['preparedBy']."'";
+									$resultE = mysqli_query($dbc, $queryE);
+									$rowE = mysqli_fetch_array($resultE, MYSQLI_ASSOC);
 									
-									<tr>
-										<th><center> 2 </center></th>
-										<td> RSB G-40 </td>
-										<td> 25mm x 6m </td>
-										<td style = "text-align:right;"> 450 </td>
-										<td> PCS </td>
-										<td style = "text-align:right;"> 390 </td>
-										<td style = "text-align:right;"> 60 </td>
-										<td style = "text-align:right;"> - </td>
-										</tr>
-						  </table>
-						  
-				
-						  <div class="row">
-							  <div class="col-xs-4">
-								<b>Prepared by: </b> Kayle Tiu
+									echo "".ucfirst($rowE['firstName'])." ".ucfirst($rowE['lastName'])."";
+								?>
 							  </div>
-							  
-							</div>
-						  
-						  <div class="row">
-							  <div class="col-xs-4">
-								<b>Checked by: </b> - 
-							  </div>
-							  <div class="col-xs-4">
-								<b>Verified by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Noted by: </b> -
+							  <div class="col-xs-6">
+								<b>Date Created: </b> <?php echo $row['dateCreated']; ?>
 							  </div>
 							</div>
 							
-							<div class="row">
-							  <div class="col-xs-4">
-								<b>Received by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Verified by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Date Released: </b> -
-							  </div>
-							</div>
+							
+							<br>
+							
+							<!-- Per subphase -->
+							<?php
+							$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
+							$result = mysqli_query($dbc, $query);
+							
+							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+								$queryA = "SELECT * FROM sp_materials WHERE subphaseID = '".$row['subphaseID']."'";
+								$resultA = mysqli_query($dbc, $queryA);
+								
+								$itemnum = 1;
+								
+								
+								if (mysqli_num_rows($resultA)!= 0){
+									echo '<h5><label>'.$row['subphaseName'].'</label></h5>';
+									echo '<table class="table table-bordered table-striped" role = "grid">
+									<thead>
+									<tr role = "row">
+										<th style = "text-align:center;" id = "item">Item</th>
+										<th>Material</th>
+										<th>Actual Dimension</th>
+										<th style = "text-align:right;">Quantity</th>
+										<th>Unit</th>
+										</tr>
+									</thead>
+									<tbody>';
+								}
+								
+								while ($rowA = mysqli_fetch_array($resultA, MYSQLI_ASSOC)){
+									
+									$queryM = "SELECT * from materials WHERE materialID = '".$rowA['materialID']."'";
+									$resultM = mysqli_query($dbc, $queryM);
+									$rowM = mysqli_fetch_array($resultM, MYSQLI_ASSOC);
+							
+									$queryU = "SELECT * from ref_units WHERE unitID = '".$rowM['unitID']."'";
+									$resultU = mysqli_query($dbc, $queryU);
+									$rowU = mysqli_fetch_array($resultU, MYSQLI_ASSOC);
+									
+									if (empty($rowM['actualDimension'])){
+										$rowM['actualDimension'] = "-";	
+									}
+									
+									echo '
+									<tr>
+										<td><center> '.$itemnum.' </center></td>
+										<td> '.$rowM['materialName'].' </td>
+										<td> '.$rowM['actualDimension'].'  </td>
+										<td style = "text-align:right;"> '.$rowA['quantity'].' </td>
+										<td> '.strtoupper($rowU['unit']).' </td>
+										</tr>';
+									$itemnum ++;
+								}
+								echo '		 
+									</tbody>
+								</table>';
+							}
+							
+							$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
+							$result = mysqli_query($dbc, $query);
+							$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+							if ($row['statusID'] == 5 || $row['statusID'] == 6){
+								$stas = true;
+							}else{
+								$stas = false;
+							}
+							if (!isset($stat) && !$stas && $notYet){
+								echo '
+								<form action = "approveAL.php?pc='.$projectCode.'&p='.$phaseID.'" method = "post">
+								<input type="submit" name = "approved" style = "width:150px; margin:5px;" class="btn btn-success pull-right" value = "Approve">
+								</form>
+								<button type="button" style = "width:150px; margin:5px;" class="btn btn-danger pull-right" data-toggle="modal" data-target="#modal-danger">
+									Disapprove
+								</button>';
+							}
+							else{
+								echo '<a href = "#.html"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
+								';
+							}
+							?>
+							<br>
+							<br>
 							<hr>
-							<a href = "#"><button type="button" style = "width:200px; margin:5px;" class="btn btn-primary pull-right">Back to Homepage</button></a><br><br><br>
 							
                        </div>
                     </div>
@@ -351,8 +491,6 @@
         </div>
     </div>
   </div>
-</div>
-</div>
   
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -596,12 +734,44 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
-
+<!-- Modals -->
+<div class="modal modal-danger fade" id="modal-danger" style="display: none;">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><b>Reason for Disapproval</b></h4>
+              </div>
+			  <form action = "" method = "post">
+              <div class="modal-body">
+			  <input type = "text" id = "reason" name = "reason" class="form-control" placeholder="Enter Reason...">
+              </div>
+              <div class="modal-footer">
+				<input type="submit" name = "disapproved" class="btn btn-outline" value = "Submit">
+				</form>
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+<!-- Modals -->
 <script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script type = "text/javascript">
 $(document).ready(function(){
 	$('#example2').DataTable();
+});
+
+
+$("#AddMats").click(function(){
+var smth = $("#materials option[value='" + $('#mats').val() + "']").attr('data-id');
+document.getElementById('matSec').value = smth;
+var smth1 = $("#subphases option[value='" + $('#subph').val() + "']").attr('data-id');
+document.getElementById('spSec').value = smth1;
+document.getElementById('InputMat').submit();
 });
 </script>
 
