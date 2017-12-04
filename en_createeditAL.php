@@ -1,4 +1,17 @@
 <!DOCTYPE html>
+<?php
+require_once("mysql_connect.php");
+session_start();
+$dont = true;
+if (isset($_GET['pc'])){
+	$projectCode = $_GET['pc'];
+}
+
+if (isset($_GET['p'])){
+	$phaseID = $_GET['p'];
+}
+
+?>
 <html>
 <head>
   <meta charset="utf-8">
@@ -167,20 +180,20 @@
       <ul class="sidebar-menu" data-widget="tree">
 		
         <li class="header">MAIN NAVIGATION</li>
-		<li class="active treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Bill of Materials</span>
             
           </a>
         </li>
 
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Accessories List <b><font size="3">(AL)</b></font></span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Adjust AL</span>
             
@@ -192,37 +205,37 @@
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-check"></i> <span>Approve AL</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Requisition Slip <b><font size="3">(RS)</b></font></span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-clone"></i> <span>Compare AL with RS</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-check"></i> <span>Verify Purchase Order</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Whereabouts Slip</span>
             
           </a>
         </li>
-		<li class="treeview">
+		<li>
           <a href="pages/widgets.html">
             <i class="fa fa-edit"></i> <span>Create Transfer Request</span>
             
@@ -239,15 +252,12 @@
 	
 	<div id="page-wrapper">
         <div class="container-fluid">
-			<br><div class="callout callout-success">
-			<h4>SUCCESS!</h4>
-			You have successfully created an Accessories List.
-			</div>
+		<?php if (isset($show)) echo $show; ?>
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Accessories List</b><br>
-				<small> Write Description Here </small>
+				Create Accessories List</b><br>
+				<small> Input materials </small>
 			  </h1>
 			  <ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -258,92 +268,88 @@
                     <div class="col-lg-12">
 					<br>
                         <div class="col-xs-12">
-							<label><h4><b>Project Code: JFC-P124/17</b></h4></label>
-							<label class = "col-xs-4 pull-right"><h4><b>Type:</b> CWAL </h4></label>
-							
 							<div class="row">
-							
-							  <div class="col-xs-8">
-							  <b>Accessories List Name: </b> CWAL - Footing </div>
-							</div>
-							<div class="row">
-							  <div class="col-xs-8">
-								<b>Project Name: </b> Freshline - Beef Processing Plant
+								<div class="col-xs-6">
+									<label><h4><b>Project Code: <?php echo $projectCode; ?> </b></h4></label>
+								</div>
+							  <div class="col-xs-6">
+								<h4><b>Accessories List Name: </b> 
+								<?php
+									$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
+									$result = mysqli_query($dbc, $query);
+									$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+									echo $row['phaseName'];
+								?>
+								</h4>
 							  </div>
-							  <div class="col-xs-4">
-								<b>Location: </b> Porac, Pampanga
-							  </div>
 							</div>
+							<br>
+							
+							<h4><label>Current Materials:</label></h4>
 							
 							
-							<table class = "table table-striped table-bordered" style = "width:100%">
-							<tr>
-							  <th>Items</th>
-							  <th>Materials</th>
-							  <th>Actual Dimension</th>
-							  <th style = "text-align:right;">Quantity</th>
-							  <th>Unit</th>
-							  <th style = "text-align:right;">Stock</th>
-							  <th style = "text-align:right;">Buy</th>
-							  <th style = "text-align:right;">Amount</th>
-							</tr>
-								<tr>
-										<th><center> 1 </center></th>
-										<td> RSB G-40 </td>
-										<td> 20mm x 6m </td>
-										<td style = "text-align:right;"> 600 </td>
-										<td> PCS </td>
-										<td style = "text-align:right;"> 450 </td>
-										<td style = "text-align:right;"> 150 </td>
-										<td style = "text-align:right;"> - </td>
+							<form action = '<?php echo "en_createAL.php?pc=".$projectCode."&p=".$phaseID."&d=f"; ?>' method = "post" id = "InputMat" name = "InputMat">
+							
+							<!-- Per subphase -->
+							<?php
+							$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
+							$result = mysqli_query($dbc, $query);
+							$tempArray = array();
+							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+								echo '<h5><label>'.$row['subphaseName'].'</label></h5>';
+								echo '<table class="table table-bordered table-striped" role = "grid">
+									<thead>
+									<tr role = "row">
+										<th style = "text-align:center;" id = "item">Item</th>
+										<th>Material</th>
+										<th>Actual Dimension</th>
+										<th style = "text-align:right;">Quantity</th>
+										<th>Unit</th>
 									</tr>
+									</thead>
+									<tbody>';
+									if (isset($_SESSION['cart'][$row['subphaseName']])){
+										$ctr = 0;
+										$itemnum = 1;
+										while (isset($_SESSION['cart'][$row['subphaseName']][$ctr])){
+											$queryM = "SELECT * from materials WHERE materialID = '".$_SESSION['cart'][$row['subphaseName']][$ctr][0]."'";
+											$resultM = mysqli_query($dbc, $queryM);
+											$rowM = mysqli_fetch_array($resultM, MYSQLI_ASSOC);
 									
-									<tr>
-										<th><center> 2 </center></th>
-										<td> RSB G-40 </td>
-										<td> 25mm x 6m </td>
-										<td style = "text-align:right;"> 450 </td>
-										<td> PCS </td>
-										<td style = "text-align:right;"> 390 </td>
-										<td style = "text-align:right;"> 60 </td>
-										<td style = "text-align:right;"> - </td>
-										</tr>
-						  </table>
-						  
-				
-						  <div class="row">
-							  <div class="col-xs-4">
-								<b>Prepared by: </b> Kayle Tiu
-							  </div>
-							  
-							</div>
-						  
-						  <div class="row">
-							  <div class="col-xs-4">
-								<b>Checked by: </b> - 
-							  </div>
-							  <div class="col-xs-4">
-								<b>Verified by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Noted by: </b> -
-							  </div>
-							</div>
-							
-							<div class="row">
-							  <div class="col-xs-4">
-								<b>Received by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Verified by: </b> -
-							  </div>
-							  <div class="col-xs-4">
-								<b>Date Released: </b> -
-							  </div>
-							</div>
+											$queryU = "SELECT * from ref_units WHERE unitID = '".$rowM['unitID']."'";
+											$resultU = mysqli_query($dbc, $queryU);
+											$rowU = mysqli_fetch_array($resultU, MYSQLI_ASSOC);
+											
+											if (empty($rowM['actualDimension'])){
+												$rowM['actualDimension'] = "-";	
+											}
+											
+											$fieldName = "sp".$row['subphaseID']."m".$rowM['materialID']."";
+											echo $fieldName;
+											echo '
+											<tr>
+												<td><center> '.$itemnum.' </center></td>
+												<td> '.$rowM['materialName'].' </td>
+												<td> '.$rowM['actualDimension'].' </td>
+												<td style = "text-align:right;"> <input type = "number" class = "form-control" style = "text-align:right;" name = "'.$fieldName.'" value = "'.$_SESSION['cart'][$row['subphaseName']][$ctr][1].'"> </td>
+												<td> '.strtoupper($rowU['unit']).' </td>
+												<input type = "hidden" name = "matID" value = "'.$rowM['materialID'].'">
+												<input type = "hidden" name = "spID" value = "'.$row['subphaseID'].'">
+											</tr>';
+											$itemnum ++;
+											$ctr ++;
+										}
+									}
+								echo '		 
+									</tbody>
+								</table>
+								<hr>';
+							}
+							?>
+							<input type = "submit" class = "btn btn-primary pull-right" name = "editQty" value = "Edit Quantity"><br>
+							</form>
+							<br>
 							<hr>
-							<a href = "#"><button type="button" style = "width:200px; margin:5px;" class="btn btn-primary pull-right">Back to Homepage</button></a><br><br><br>
-							
                        </div>
                     </div>
                 </div>    
@@ -351,8 +357,6 @@
         </div>
     </div>
   </div>
-</div>
-</div>
   
   <!-- /.content-wrapper -->
   <footer class="main-footer">
@@ -602,6 +606,15 @@
 <script type = "text/javascript">
 $(document).ready(function(){
 	$('#example2').DataTable();
+});
+
+
+$("#AddMats").click(function(){
+var smth = $("#materials option[value='" + $('#mats').val() + "']").attr('data-id');
+document.getElementById('matSec').value = smth;
+var smth1 = $("#subphases option[value='" + $('#subph').val() + "']").attr('data-id');
+document.getElementById('spSec').value = smth1;
+document.getElementById('InputMat').submit();
 });
 </script>
 
