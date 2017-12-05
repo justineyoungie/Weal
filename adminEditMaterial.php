@@ -1,3 +1,75 @@
+<?php
+
+session_start();
+
+require_once('mysql_connect.php');
+
+$query="select * from materials where materialID = " . $_SESSION['materialID'];
+$result=mysqli_query($dbc,$query);
+
+$row=mysqli_fetch_array($result,MYSQLI_ASSOC);
+
+$oldMaterialName = $row['materialName'];
+					
+if (isset($_POST['submit'])){
+
+$message=NULL;
+
+//pag walang laman yung productname field sa html ilalagay yung message sa $message
+//na nakalimutan mo mag enter ng product name
+
+//pag may laman ma sstore sa variable $productname yung inenter mong name ng product sa 
+//productname field (dinefine ni sir sa html yung field name as productname)
+
+ if (empty($_POST['materialName'])){
+  $materialName=NULL;
+  $message.='<p>You forgot to enter the material name!';
+ }else
+  $materialName=$_POST['materialName'];
+
+ if (empty($_POST['unitID'])){
+  $unitID=NULL;
+  $message.='<p>You forgot to enter the unit!';
+ }else
+  $unitID=$_POST['unitID'];
+
+  if (empty($_POST['actualDimension'])){
+  $actualDimension=NULL;
+  $message.='<p>You forgot to enter the actual dimension!';
+ }else
+  $actualDimension=$_POST['actualDimension'];
+
+ //pag wala kang nakalimutan na ienter na field
+if(!isset($message)){
+
+//yung '../mysql_connect.php' yung directory ng mysql_connect.php mo 
+// .. means to go back one level
+require_once('mysql_connect.php');
+//mag sstore ka ng SQL query sa isang variable tapos
+//ipasok mo dun yung values ng bawat variable mo sa form
+//gamit ka {$variable} pag numerical
+//gamit ka '{$variable}' pag string
+//$result is just another variable
+//mysqli_query is a method na kung saan kailangan mo ng 
+//credentials ng db tapos yung papasok mong query
+//pag successful yan gagawa na siya ng record ng product
+//then ininsert ni sir yung values ng bawat variable mo sa form sa $message
+//para lang malaman mo na kung ano yung ininsert mong product record\
+$message="<b><p>Material: " . $oldMaterialName . " edited! </b>";
+$query="update materials set materialName = '" . $materialName . "' , unitID = " . $unitID . " ,  actualDimension = '" . $actualDimension . "' where materialID = " . $_SESSION['materialID'];
+$result=mysqli_query($dbc,$query);
+
+}
+ 
+
+}/*End of main Submit conditional*/
+
+if (isset($message)){
+ echo '<font color="red">'.$message. '</font>';
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -218,18 +290,41 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-xs-12">
+			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+			
+				<?php
+							
+							if(isset($_GET['submit'])){
+								$_SESSION['materialID'] = $_GET['submit'];
+							}
+							require_once('mysql_connect.php');
+
+							$query="select * from materials where materialID = " . $_SESSION['materialID'];
+							$result=mysqli_query($dbc,$query);
+							
+							$row=mysqli_fetch_array($result,MYSQLI_ASSOC);
+							
+						?>
+			
               <!-- MATERIAL NAME -->
                         <div class="col-xs-8 form-group">
                             <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
+                            <?php echo "<input required name='materialName' type='text' class='form-control input' id='input1' value='{$row['materialName']}'>";?>
                         </div>
 						<!-- MATERIAL UNIT -->
                         <div class="col-xs-8 form-group">
                             <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
+							<select class="form-control" name="unitID">
+							<?php
+								require_once('mysql_connect.php');
+
+								$query="select * from ref_units";
+								$result=mysqli_query($dbc,$query);
+								
+								while($row2=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+									echo "<option value={$row2['unitID']}>{$row2['unit']}</option>";
+								}
+							?>
 							</select>
 
                         </div>
@@ -238,24 +333,19 @@
 
                         <div class="col-xs-8 form-group">
                             <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
-							
-							</select>
+							<?php echo "<input required name='actualDimension' type='text' class='form-control input' id='input1' value='{$row['actualDimension']}'>";?>
 
                         </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
+						<a href="adminAddUnitOfMeasurementFromEditMaterial.php"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
 
 						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
 						
 					<!-- CREATE BUTTON -->
 					<div class="col-xs-8 form-group">
 						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
+						<a href="adminMaterialList.php"><button type="button">Back</button></a>
 					</div>
+				</form>
             </div>
         </div>
         <!-- /.row (main row) -->

@@ -1,9 +1,64 @@
+<?php
+//lagi ka maglalagay ng session_start(); sa unang line ng <?php mo
+//pati yung require_once('../mysql_connect.php');
+
+session_start();
+
+//pag na click si submit button which is name niya = 'submit' (dinefine ni sir sa html
+//as submit)
+if (isset($_POST['submit'])){
+
+//nagdeclare lang siya ng message variable for later
+$message=NULL;
+
+//pag walang laman yung productname field sa html ilalagay yung message sa $message
+//na nakalimutan mo mag enter ng product name
+
+//pag may laman ma sstore sa variable $productname yung inenter mong name ng product sa 
+//productname field (dinefine ni sir sa html yung field name as productname)
+ if (empty($_POST['usertype'])){
+  $usertype=NULL;
+  $message.='<p>You forgot to enter the user type!';
+ }else
+  $usertype=$_POST['usertype'];
+
+ //pag wala kang nakalimutan na ienter na field
+if(!isset($message)){
+
+//yung '../mysql_connect.php' yung directory ng mysql_connect.php mo 
+// .. means to go back one level
+require_once('mysql_connect.php');
+//mag sstore ka ng SQL query sa isang variable tapos
+//ipasok mo dun yung values ng bawat variable mo sa form
+//gamit ka {$variable} pag numerical
+//gamit ka '{$variable}' pag string
+//$result is just another variable
+//mysqli_query is a method na kung saan kailangan mo ng 
+//credentials ng db tapos yung papasok mong query
+//pag successful yan gagawa na siya ng record ng product
+//then ininsert ni sir yung values ng bawat variable mo sa form sa $message
+//para lang malaman mo na kung ano yung ininsert mong product record
+$query="insert into ref_usertype (usertype) values ('{$usertype}')";
+$result=mysqli_query($dbc,$query);
+$message="<b><p>User Type: {$usertype} added! </b>";
+
+}
+ 
+
+}/*End of main Submit conditional*/
+
+if (isset($message)){
+ echo '<font color="red">'.$message. '</font>';
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Edit Material</title>
+  <title>AdminLTE 2 | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -172,10 +227,10 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Raw Materials</a></li>
             <li><a href="index2.html"><i class="fa fa-circle-o"></i> Materials</a></li>
 			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Suppliers</a></li>
-			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Accounts</a></li>
+			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Employees</a></li>
+			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Clients</a></li>
           </ul>
         </li>
 		
@@ -186,11 +241,11 @@
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Raw Materials</a></li>
+          <ul class="treeview-menu">       
             <li><a href="index2.html"><i class="fa fa-circle-o"></i> Materials</a></li>
 			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Suppliers</a></li>
-			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Accounts</a></li>
+			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Employees</a></li>
+			<li><a href="index2.html"><i class="fa fa-circle-o"></i> Clients</a></li>
           </ul>
         </li>
         
@@ -204,8 +259,8 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Edit Material<br>
-          <small>Edits records of materials</small>
+          Create User Type<br>
+          <small>Creates user types</small>
         </h1>
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -218,44 +273,23 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-xs-12">
-              <!-- MATERIAL NAME -->
+			
+			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+              <!-- DIMENSIONS -->
                         <div class="col-xs-8 form-group">
-                            <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
+                            <label for="input1">User Type</label>
+                            <input required type="text" class="form-control input" id="input1" placeholder="Enter user type..." name="usertype">
                         </div>
-						<!-- MATERIAL UNIT -->
-                        <div class="col-xs-8 form-group">
-                            <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
-							</select>
-
-                        </div>
-
-					<!-- MATERIAL DIMENSIONS -->	
-
-                        <div class="col-xs-8 form-group">
-                            <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
-							
-							</select>
-
-                        </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
-
-						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
+						
 						
 					<!-- CREATE BUTTON -->
 					<div class="col-xs-8 form-group">
 						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
 					</div>
+					<div class="col-xs-8 form-group">
+						<a href="adminCreateEmployee.php"><button type="button" name="back" value="Back">Back</button></a>
+					</div>
+			</form>
             </div>
         </div>
         <!-- /.row (main row) -->

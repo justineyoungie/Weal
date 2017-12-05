@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Edit Material</title>
+  <title>Create Employee Account</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -204,8 +204,8 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          Edit Material<br>
-          <small>Edits records of materials</small>
+          Create Employee Account<br>
+          <small>Creates accounts of employees</small>
         </h1>
         <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -218,43 +218,69 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-xs-12">
-              <!-- MATERIAL NAME -->
-                        <div class="col-xs-8 form-group">
-                            <label for="input1">Name</label>
-                            <input required type="text" class="form-control input" id="input1" value="RSB G-40" name="productname">
+					<!-- EMPLOYEE USER NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Username</label>
+                            <input required name="username" type="text" class="form-control input" id="input1" placeholder="Enter user name...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE PASSWORD -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Password</label>
+                            <input required name="password" type="password" class="form-control input" id="input1" placeholder="Enter password...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE FIRST NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">First Name</label>
+                            <input required name="firstname" type="text" class="form-control input" id="input1" placeholder="Enter first name...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE LAST NAME -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Last Name</label>
+                            <input required name="lastname" type="text" class="form-control input" id="input1" placeholder="Enter last name...">
+                        </div><br><br><br><br>
+						<!-- GENDER -->
+							<div class="col-xs-6 form-group">
+								<label>Gender</label>
+								<select class="form-control" name="gender">
+									<option value="M">Male</option>
+									<option value="F">Female</option>
+								</select>
+							</div><br><br><br><br>
+						<!-- EMPLOYEE ADDRESS -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">Home Address</label>
+                            <input required name="address" type="text" class="form-control input" id="input1" placeholder="Enter home address...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE EMAIL -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input1">E-mail</label>
+                            <input required name="email" type="text" class="form-control input" id="input1" placeholder="Enter e-mail address...">
+                        </div><br><br><br><br>
+						<!-- EMPLOYEE TITLE -->
+                        <div class="col-xs-6 form-group">
+								<label>Employee Title</label>
+								<select class="form-control" name="title">
+									<option value="Sales Administrator">Warehouse Manager</option>
+									<option value="Senior HRI Specialist">Engineering Head</option>
+									<option value="Logistics Department Head">Sales Secretary</option>
+								</select>
+							</div><br><br><br><br>
+						<!-- PHONE NUMBER -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input2">Phone Number</label>
+                            <input required name="phonenumber" type="text" class="form-control input" id="input2" placeholder="Enter phone number...">
+                        </div><br><br><br><br>
+						<!-- EMERGENCY CONTACT NUMBER -->
+                        <div class="col-xs-6 form-group">
+                            <label for="input2">Emergency Contact Number</label>
+                            <input required name="emergencycontactnumber" type="text" class="form-control input" id="input2" placeholder="Enter emergency contact number...">
                         </div>
-						<!-- MATERIAL UNIT -->
-                        <div class="col-xs-8 form-group">
-                            <label>Unit</label>
-							<select class="form-control" name="producttype">
-							<option>KGS</option>
-							<option>CUM</option>
-							<option>PCS</option>
-							</select>
-
-                        </div>
-
-					<!-- MATERIAL DIMENSIONS -->	
-
-                        <div class="col-xs-8 form-group">
-                            <label>Dimensions</label>
-							<select class="form-control" name="producttype">
-							<option>3"</option>
-							<option>G-3/4</option>
-							<option>20mm x 6mm</option>
-							
-							</select>
-
-                        </div><br><br><br><br><br>
-						<a href="adminAddUnitOfMeasurementFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD UNIT OF MEASUREMENT</button></a>
-
-						<br><br><br>
-						<a href="adminAddDimensionFromEditMaterial.html"><button  type="button" class="btn btn-success btn-fill" >ADD DIMENSION</button></a>
+                    
 						
 					<!-- CREATE BUTTON -->
 					<div class="col-xs-8 form-group">
 						<input type="submit" name="submit" value="Submit">
-						<a href="adminMaterialList.html"><button>Back</button></a>
+					</div>
 					</div>
             </div>
         </div>
