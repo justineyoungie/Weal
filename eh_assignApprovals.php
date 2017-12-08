@@ -424,17 +424,18 @@ if (isset($_POST['removeApp'])){
 							<tr>
 								<td>
 								<input type = "hidden" id = "acctSec" name = "acctSec" value = "">
-								<input class = "form-control" list="accounts" id = "acct" name = "acct" max ="" value = "" placeholder = "Enter Employee Name/ID" autocomplete="off" required>
+								<input class = "form-control" list="accounts" id = "acct" name = "acct" max ="" value = "" placeholder = "Enter Employee Name/ID/Postion" autocomplete="off" required>
 								<datalist id="accounts">
 								<?php
-								$query = "SELECT * FROM accounts a JOIN employee e ON a.accountID = e.accountID WHERE a.usertypeID != 100 AND a.usertypeID != 107";
+								$query = "SELECT * FROM accounts a JOIN employee e ON a.accountID = e.accountID JOIN ref_usertype u ON u.usertypeID = a.usertypeID WHERE a.usertypeID != 100 AND a.usertypeID != 107";
 								$result = mysqli_query($dbc, $query);
 								
 								while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 									$str = "";
 									$str .= "<option value='";
 									$str .= $row['employeeID'];
-									$str .= " - ".ucfirst($row['firstName'])." ".ucfirst($row['lastName'])."'";
+									$str .= " - ".ucfirst($row['firstName'])." ".ucfirst($row['lastName'])."";
+									$str .= " - ".ucfirst($row['usertype'])."'";
 									$str .= ' data-id = "'.$row['accountID'].'"></option>';
 									echo $str;
 								}
@@ -487,6 +488,7 @@ if (isset($_POST['removeApp'])){
 								<tr role = "row">
 									<th>Employee ID</th>
 									<th>Employee Name</th>
+									<th>Position</th>
 									<th>Document Type</th>
 									<th>Type of Approval</th>
 									<th></th>
@@ -498,7 +500,7 @@ if (isset($_POST['removeApp'])){
 										$query = "SELECT * FROM docu_approval";
 										$result = mysqli_query($dbc, $query);
 										while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-											$queryA = "SELECT * FROM accounts a JOIN employee e ON a.accountID = e.accountID WHERE a.accountID = '".$row['accountID']."' ";
+											$queryA = "SELECT * FROM accounts a JOIN employee e ON a.accountID = e.accountID JOIN ref_usertype u ON u.usertypeID = a.usertypeID WHERE a.accountID = '".$row['accountID']."' ";
 											$resultA = mysqli_query($dbc, $queryA);
 											$rowA = mysqli_fetch_array($resultA, MYSQLI_ASSOC);
 											
@@ -516,6 +518,7 @@ if (isset($_POST['removeApp'])){
 											<tr>
 												<td>'.$rowA['employeeID'].'</td>
 												<td>'.$rowA['firstName'].' '.$rowA['lastName'].'</td>
+												<td>'.$rowA['usertype'].'</td>
 												<td>'.$rowB['docutype'].'</td>
 												<td>'.$rowC['approve'].'</td>
 												<form action = "eh_assignApprovals.php?a='.$row['accountID'].'&d='.$row['docutypeID'].'&ap='.$row['approveID'].'" method = "post"><td><center><a href = "eh_assignApprovals.php?a='.$row['accountID'].'&d='.$row['docutypeID'].'&a='.$row['approveID'].'"><button type = "submit" class="btn btn-social-icon btn-google" name = "removeApp"><i class="fa fa-bitbucket"></i></button></a></center></td></form>
