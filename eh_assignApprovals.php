@@ -4,7 +4,46 @@ require_once("mysql_connect.php");
 session_start();
 
 if (isset($_POST['acctSec'])){
-	echo "ASD";
+	if ($_POST['acctSec'] != "undefined"){
+		$accountID = $_POST['acctSec'];
+		$doctypeID = $_POST['doctype'];
+		$approveID = $_POST['apptype'];
+		
+		$query = "INSERT INTO `docu_approval` (`accountID`, `docutypeID`, `approveID`) 
+				  VALUES ('".$accountID."', '".$doctypeID."', '".$approveID."')";
+		$result = mysqli_query($dbc, $query);
+		if (!$result){
+			$statusMessage = "<font color = 'red'><b>Add Error!</b></font>";
+		}else{
+			$statusMessage = "<font color = 'green'><b>Add Success!</b></font>";
+		}
+	}else{
+		$statusMessage = "<font color = 'red'><b>Add Error!</b></font>";
+	}
+}
+
+if (isset($_POST['removeApp'])){
+	$accountID = $_GET['a'];
+	$doctypeID = $_GET['d'];
+	$approveID = $_GET['ap'];
+	
+	$stas = true;
+	
+	$query = "DELETE FROM docu_approval WHERE accountID = '".$accountID."' AND docutypeID = '".$doctypeID."' AND approveID = '".$approveID."' ";
+	$result = mysqli_query($dbc, $query);
+	if (!$result){
+		$message = '<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<h4><i class="icon fa fa-ban"></i>Approval Removed!</h4>
+						You have unsuccessfully removed a document approval.
+					</div>';
+	}else{
+		$message = '<div class="alert alert-success alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<h4><i class="icon fa fa-check"></i> SUCCESS! </h4>
+					You have successfully removed a document approval.
+				</div>';
+	}
 }
 
 ?>
@@ -12,7 +51,7 @@ if (isset($_POST['acctSec'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Assign Approvals</title>
+  <title>Manage Document Approvals</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
@@ -358,7 +397,7 @@ if (isset($_POST['acctSec'])){
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Assign Document Approvals</b><br>
+				Manage Document Approvals</b><br>
 				<small>Select an employee and corresponding approval</small>
 			  </h1>
 			  <ol class="breadcrumb">
@@ -369,7 +408,11 @@ if (isset($_POST['acctSec'])){
                 <div class="row">
                     <div class="col-lg-12">
 					<br>
-                        <div class="col-xs-12">
+                        <div class="col-xs-12"><?php 
+						if (isset($message)){
+							echo $message;
+						}
+						?>
 						<form action = "<?php echo $_SERVER['PHP_SELF']; ?>" method = "post" id = "addApproval" name = "addApproval">
 						<table class="table table-bordered table-striped">
 						<tr>
@@ -429,14 +472,20 @@ if (isset($_POST['acctSec'])){
 								<td>
 								<input type = "submit" value = "Assign Approval" name = "AssignApproval" id = "AssignApproval" class="btn btn-block btn-primary">
 								</td>
-							</tr>
+							</tr><?php 
+						if (isset($statusMessage)){
+							echo $statusMessage;
+						}
+						?>
 						</table>
 						</form>
+						
 						<hr>
 						<h4><b>List of Assigned Approvals</b></h4>
 						<table id="example2" class="table table-bordered table-striped dataTable" role = "grid" aria-describedby="example2_info">
 								<thead>
 								<tr role = "row">
+									<th>Employee ID</th>
 									<th>Employee Name</th>
 									<th>Document Type</th>
 									<th>Type of Approval</th>
@@ -445,9 +494,36 @@ if (isset($_POST['acctSec'])){
                                 </thead>
 								
 								<tbody>
-								
-								
-																
+									<?php
+										$query = "SELECT * FROM docu_approval";
+										$result = mysqli_query($dbc, $query);
+										while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+											$queryA = "SELECT * FROM accounts a JOIN employee e ON a.accountID = e.accountID WHERE a.accountID = '".$row['accountID']."' ";
+											$resultA = mysqli_query($dbc, $queryA);
+											$rowA = mysqli_fetch_array($resultA, MYSQLI_ASSOC);
+											
+											$queryB = "SELECT * FROM ref_docutype WHERE docutypeID = '".$row['docutypeID']."' ";
+											$resultB = mysqli_query($dbc, $queryB);
+											$rowB = mysqli_fetch_array($resultB, MYSQLI_ASSOC);
+											
+											$queryC = "SELECT * FROM ref_approve WHERE approveID = '".$row['approveID']."' ";
+											$resultC = mysqli_query($dbc, $queryC);
+											$rowC = mysqli_fetch_array($resultC, MYSQLI_ASSOC);
+											
+											
+											echo'
+											
+											<tr>
+												<td>'.$rowA['employeeID'].'</td>
+												<td>'.$rowA['firstName'].' '.$rowA['lastName'].'</td>
+												<td>'.$rowB['docutype'].'</td>
+												<td>'.$rowC['approve'].'</td>
+												<form action = "eh_assignApprovals.php?a='.$row['accountID'].'&d='.$row['docutypeID'].'&ap='.$row['approveID'].'" method = "post"><td><center><a href = "eh_assignApprovals.php?a='.$row['accountID'].'&d='.$row['docutypeID'].'&a='.$row['approveID'].'"><button type = "submit" class="btn btn-social-icon btn-google" name = "removeApp"><i class="fa fa-bitbucket"></i></button></a></center></td></form>
+											</tr>
+											
+											';
+										}
+									?>
 								</tbody>
                             </table>
 						
@@ -713,7 +789,6 @@ $(document).ready(function(){
 $("#AssignApproval").click(function(){
 var smth = $("#accounts option[value='" + $('#acct').val() + "']").attr('data-id');
 document.getElementById('acctSec').value = smth;
-document.getElementById('addApproval').submit();
 });
 </script>
 
