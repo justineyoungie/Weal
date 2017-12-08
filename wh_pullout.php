@@ -2,191 +2,16 @@
 <?php
 require_once("mysql_connect.php");
 session_start();
-$_SESSION['accountID'] = 10000001;
-
-$dont = true;
-
-if (isset($_GET['p'])){
-	$phaseID = $_GET['p'];
-	$query = "SELECT projectCode FROM phases WHERE phaseID = '".$phaseID."'";
-	$result = mysqli_query($dbc, $query);
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	$projectCode = $row['projectCode'];
-}
-
-if (isset($_GET['d'])){
-	$dont = false;
-}
-
-//When adding materials to cart
-if (isset($_POST['matSec']) && isset($_POST['spSec']) && isset($_POST['qty'])){
-	
-			$ss = false;
-	if ($_POST['matSec'] != "undefined" && $_POST['spSec'] != "undefined" && $_POST['qty'] != ""){
-		$subphaseID = $_POST['spSec'];
-		$materialID = $_POST['matSec'];
-		$quantity = $_POST['qty'];
-		
-		$query = "SELECT * from subphases WHERE subphaseID = '".$subphaseID."'";
-		$result = mysqli_query($dbc, $query);
-		
-		if ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-			$queryy = "SELECT * FROM sp_materials WHERE subphaseID = '".$subphaseID."'";
-			$resultt = mysqli_query($dbc, $queryy);
-			$ss = false;
-			while ($roww = mysqli_fetch_array($resultt, MYSQLI_ASSOC)){
-				if ($roww['materialID'] == $materialID){
-					if (isset($_SESSION['cart'][$row['subphaseName']])){
-						$ctr = 0;
-						$stop = false;
-						while (isset($_SESSION['cart'][$row['subphaseName']][$ctr])){
-							if ($row['subphaseID'] == $subphaseID && $_SESSION['cart'][$row['subphaseName']][$ctr][0] == $materialID){
-								$tempQty = $_SESSION['cart'][$row['subphaseName']][$ctr][1] + $quantity;
-								if ($roww['quantity'] >= $tempQty){
-									$_SESSION['cart'][$row['subphaseName']][$ctr][1] += $quantity;
-									$ss = true;
-									$statusMessage = "<font color = 'green'><b>Add Success!</b></font>";
-									break;
-								}
-								$stop = true;
-							}
-							$ctr++;
-						}
-						if (!$stop){
-							array_push($_SESSION['cart'][$row['subphaseName']], array($materialID, $quantity));
-							$ss = true;
-							$statusMessage = "<font color = 'green'><b>Add Success!</b></font>";
-						}
-					}
-				}
-			}
-		}
-		
-	}else{
-		$statusMessage = "<font color = 'red'><b>Add Error!</b></font>";
-	}
-	
-	if (!$ss){
-		$statusMessage = "<font color = 'red'><b>Add Error!</b></font>";
-	}
-	$dont = false;
-}
-
-//When deleting materials from current cart
-if (isset($_POST['deleteMat'])){	
-	$materialID = $_POST['matID'];
-	$subphaseID = $_POST['spID'];
-	$query = "SELECT * from subphases WHERE subphaseID = '".$subphaseID."'";
-	$result = mysqli_query($dbc, $query);
-
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-		if (isset($_SESSION['cart'][$row['subphaseName']])){
-			$ctr = 0;
-			$stop = false;
-			while (isset($_SESSION['cart'][$row['subphaseName']][$ctr])){
-				if ($row['subphaseID'] == $subphaseID && $_SESSION['cart'][$row['subphaseName']][$ctr][0] == $materialID){
-					unset($_SESSION['cart'][$row['subphaseName']][$ctr]);
-					$_SESSION['cart'][$row['subphaseName']] = array_values($_SESSION['cart'][$row['subphaseName']]);
-					$stop = true;
-					break;
-				}
-				$ctr++;
-			}
-		}
-	}
-	
-	$dont = false;
-}
-
-//When editing quantity of materials
-if (isset($_POST['editQty'])){
-	$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
-	$result = mysqli_query($dbc, $query);
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-		if (isset($_SESSION['cart'][$row['subphaseName']])){
-			$ctr = 0;
-			while (isset($_SESSION['cart'][$row['subphaseName']][$ctr])){
-				$fieldName = "sp".$row['subphaseID']."m".$_SESSION['cart'][$row['subphaseName']][$ctr][0]."";
-				$qty = $_POST[$fieldName];
-				$_SESSION['cart'][$row['subphaseName']][$ctr][1] = $qty;
-				$ctr++;
-			}
-		}
-	}
-	//print_r($_SESSION['cart']);
-	$dont = false;
-}
-
-//creating cart **insert to db**
-if (isset($_POST['createRS'])){
-	
-	$insertQ = "INSERT INTO `requisitionslip` (`projectCode`, `requestedBy`, `dateNeeded`, `rsStatusID`)
-	VALUES ('".$projectCode."', '".$_SESSION['accountID']."', '".$_POST['dateNeeded']."', '9')";
-	$resultQ = mysqli_query($dbc, $insertQ);
-	$rsID = mysqli_insert_id($dbc);
-	
-	$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
-	$result = mysqli_query($dbc, $query);
-	$status = false;
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-		$ctr = 0;
-		while (isset($_SESSION['cart'][$row['subphaseName']][$ctr])){
-			
-			$materialID = $_SESSION['cart'][$row['subphaseName']][$ctr][0];
-			$qty = $_SESSION['cart'][$row['subphaseName']][$ctr][1];
-			
-			$queryA = "INSERT INTO `rsdetails` (`materialID`, `quantity`, `rsNumber`, `subphaseID`) 
-			VALUES ('".$materialID."', '".$qty."', '".$rsID."', '".$row['subphaseID']."')";
-			$resultA = mysqli_query($dbc, $queryA);
-			if ($resultA){
-				$status = true;
-			}
-			$ctr++;
-		}
-	}
-	//print_r($_SESSION['cart']);
-	$dont = false;
-	
-	if ($status){
-		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/en_requestRS1.php?p=".$phaseID."&r=".$rsID."");
-	}else{
-		$deleteQ = "DELETE FROM `requisitionslip` WHERE rsNumber = '".$rsID."' ";
-		$resultQ = mysqli_query($dbc, $deleteQ);
-		
-		$Quer = "SELECT MAX(`rsNumber`) AS 'Number' FROM `requisitionslip`";
-		$resQuer = mysqli_query($dbc, $Quer);
-		$rQuer = mysqli_fetch_array($resQuer, MYSQLI_ASSOC);
-		$num = $rQuer['Number'];
-		
-		$upQ = "ALTER TABLE `requisitionslip` AUTO_INCREMENT = ".$num." ";
-		$reQ = mysqli_query($dbc, $upQ);
-	}
-}
-
-//initializing cart **adds suggested mats to cart**
-if (isset($_GET['p'])){
-	$phaseID = $_GET['p'];
-	if ($dont){
-		$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
-		$result = mysqli_query($dbc, $query);
-		$tempArray = array();
-		while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-			$tempArray[$row['subphaseName']] = array();
-			$_SESSION['cart'] = $tempArray;
-		}
-		//print_r($tempArray);
-	}
-}
-
 
 ?>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Create Requisition Slip</title>
+  <title>Pull-out Requests</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
   
   <link rel ="stylesheet" type = "text/css" href ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <link rel ="stylesheet" type = "text/css" href ="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
@@ -346,69 +171,175 @@ if (isset($_GET['p'])){
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-		
         <li class="header">MAIN NAVIGATION</li>
-		<li>
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Layout Options</span>
+            <span class="pull-right-container">
+              <span class="label label-primary pull-right">4</span>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
+            <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
+            <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
+          </ul>
+        </li>
+        <li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Bill of Materials</span>
-            
+            <i class="fa fa-th"></i> <span>Widgets</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-green">new</small>
+            </span>
           </a>
         </li>
-
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Accessories List <b><font size="3">(AL)</b></font></span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pie-chart"></i>
+            <span>Charts</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
+            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
+            <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
+            <li><a href="pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>UI Elements</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
+            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
+            <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
+            <li><a href="pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
+            <li><a href="pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
+            <li><a href="pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i> <span>Forms</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
+            <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
+            <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-table"></i> <span>Tables</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
+            <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Data tables</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="pages/calendar.html">
+            <i class="fa fa-calendar"></i> <span>Calendar</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-red">3</small>
+              <small class="label pull-right bg-blue">17</small>
+            </span>
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Adjust AL</span>
-            
+        <li>
+          <a href="pages/mailbox/mailbox.html">
+            <i class="fa fa-envelope"></i> <span>Mailbox</span>
+            <span class="pull-right-container">
+              <small class="label pull-right bg-yellow">12</small>
+              <small class="label pull-right bg-green">16</small>
+              <small class="label pull-right bg-red">5</small>
+            </span>
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Check AL</span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-folder"></i> <span>Examples</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
           </a>
+          <ul class="treeview-menu">
+            <li><a href="pages/examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
+            <li><a href="pages/examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>
+            <li><a href="pages/examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
+            <li><a href="pages/examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
+            <li><a href="pages/examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
+            <li><a href="pages/examples/404.html"><i class="fa fa-circle-o"></i> 404 Error</a></li>
+            <li><a href="pages/examples/500.html"><i class="fa fa-circle-o"></i> 500 Error</a></li>
+            <li><a href="pages/examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
+            <li><a href="pages/examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
+          </ul>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Approve AL</span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-share"></i> <span>Multilevel</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
           </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+            <li class="treeview">
+              <a href="#"><i class="fa fa-circle-o"></i> Level One
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                <li class="treeview">
+                  <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+          </ul>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Requisition Slip <b><font size="3">(RS)</b></font></span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-clone"></i> <span>Compare AL with RS</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Verify Purchase Order</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Whereabouts Slip</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Transfer Request</span>
-            
-          </a>
-        </li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
+        <li class="header">LABELS</li>
+        <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
+        <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
+        <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -420,163 +351,62 @@ if (isset($_GET['p'])){
 	
 	<div id="page-wrapper">
         <div class="container-fluid">
-		<?php if (isset($show)) echo $show; ?>
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Create Requisition Slip</b><br>
-				<small> Input materials </small>
+				Pull-out Requests</b><br>
+				<small>Select requisition slip to pull-out</small>
 			  </h1>
 			  <ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
 				<li class="active">Dashboard</li>
 			  </ol>
 			</section>
-			<?php
-			if (isset($status)){
-				if (!$status){
-					echo'
-					<div class="alert alert-danger alert-dismissable">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-					<h4><i class="icon fa fa-ban"></i>FAILED!</h4>
-						There\'s an error creating the Requisition Slip.
-					</div>';
-				}
-			}
-			?>
                 <div class="row">
                     <div class="col-lg-12">
 					<br>
                         <div class="col-xs-12">
-							<div class="row">
-								<div class="col-xs-4">
-									<label><h4><b>Project Code: <?php echo $projectCode; ?> </b></h4></label>
-								</div>
+							<table id="example2" class="table table-bordered table-striped dataTable" role = "grid" aria-describedby="example2_info">
+								<thead>
+								<tr role = "row">
+									<th>R.S. Number</th>
+									<th>Project Code</th>
+									<th>Project Name</th>
+									<th>Date Needed</th>
+									<th></th>
+                                </tr>
+                                </thead>
 								
-							</div>
-							
-							<br>
-							<form action = "<?php echo "en_requestRS.php?p=".$phaseID.""; ?>" method = "post" id = "InputMat" name = "InputMat">
-							<table class = "table table-condensed" style = "width:90%">
-							<tr>
-							<td><label>Input Materials</label><input type = "hidden" id = "matSec" name = "matSec" value = "">
-							</td><td></td>
-							</tr>
-							<tr>
-							<td> 
-								<input class = "form-control" list="materials" id = "mats" name = "mats" max ="" value = "" placeholder = "Enter Inventory Name" autocomplete="off" required>
-								<datalist id="materials">
+								<tbody>
+								
 								<?php
-								$query = "SELECT * FROM materials WHERE materialID IN 
-								(SELECT DISTINCT(materialID) FROM sp_materials WHERE subphaseID IN 
-								(SELECT subphaseID FROM subphases WHERE phaseID = '".$phaseID."'))";
-								$result = mysqli_query($dbc, $query);
-								while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-									$str = "";
-									$str .= "<option value='";
-									$str .= $row['materialName'];
-									$str .= " - ".$row['actualDimension']."'"; 
-									$str .= ' data-id = "'.$row['materialID'].'"></option>';
-									echo $str;
-								}
-								?>
-								</datalist> 
-								
-							</td>
-							<td> <input type = "hidden" id = "spSec" name = "spSec" value = "">
-								<input class = "form-control" list="subphases" id = "subph" name = "subph" max ="" value = "" placeholder = "Enter Subphase Name" autocomplete="off" required >
-								<datalist id="subphases">
-								<?php
-								$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
-								$result = mysqli_query($dbc, $query);
-								while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
-									echo '<option value="'.$row['subphaseName'].'" data-id = "'.$row['subphaseID'].'"></option>';
-								?>
-								</datalist> 
-							</td>
-							<td style ="width:200px;"> <input class = "form-control" type = "number" min = 1 placeholder = "Input Quantity" name = "qty" required> </td>
-							<td> <input type="submit" class="btn btn-block btn-success" id = "AddMats" value = "Add" name ="AddMats"></td>
-							</tr>
-							<tr>
-							<td>
-							<?php 
-							if (isset($statusMessage)){
-								echo $statusMessage;
-							}
-							?>
-							</td>
-							</tr>
-							</table>
-							</form>
-							<h4><label>Current Materials:</label></h4>
-							<br>
-							<form action = "<?php echo "en_requestRS.php?p=".$phaseID.""; ?>" method = "post" id = "InputMat" name = "InputMat">
-								
-							<!-- Per subphase -->
-							<?php
-							$query = "SELECT * from subphases WHERE phaseID = '".$phaseID."'";
-							$result = mysqli_query($dbc, $query);
-							$tempArray = array();
-							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-								echo '<h5><label>'.$row['subphaseName'].'</label></h5>';
-								echo '<table class="table table-bordered table-striped" role = "grid">
-									<thead>
-									<tr role = "row">
-										<th style = "text-align:center;" id = "item">Item</th>
-										<th>Material</th>
-										<th>Actual Dimension</th>
-										<th style = "text-align:right;">Quantity</th>
-										<th>Unit</th>
-										<th></th>
-									</tr>
-									</thead>
-									<tbody>';
-									if (isset($_SESSION['cart'][$row['subphaseName']])){
-										$ctr = 0;
-										$itemnum = 1;
-										while (isset($_SESSION['cart'][$row['subphaseName']][$ctr])){
-											$queryM = "SELECT * from materials WHERE materialID = '".$_SESSION['cart'][$row['subphaseName']][$ctr][0]."'";
-											$resultM = mysqli_query($dbc, $queryM);
-											$rowM = mysqli_fetch_array($resultM, MYSQLI_ASSOC);
 									
-											$queryU = "SELECT * from ref_units WHERE unitID = '".$rowM['unitID']."'";
-											$resultU = mysqli_query($dbc, $queryU);
-											$rowU = mysqli_fetch_array($resultU, MYSQLI_ASSOC);
+									$query = "SELECT * FROM requisitionslip WHERE rsStatusID = '12' ";
+									$result = mysqli_query($dbc, $query);
+									
+									while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+										
+										$queryA = "SELECT * FROM projects WHERE projectCode = '".$row['projectCode']."' ";
+										$resultA = mysqli_query($dbc, $queryA);
+										$rowA = mysqli_fetch_array($resultA, MYSQLI_ASSOC);
+										
+										echo '
+										<tr>
+											<td>'.$row['rsNumber'].'</td>
+											<td>'.$row['projectCode'].'</td>
+											<td>'.$rowA['projectName'].'</td>';
+											$date=date_create($row['dateNeeded']);
 											
-											if (empty($rowM['actualDimension'])){
-												$rowM['actualDimension'] = "-";	
-											}
-											
-											$fieldName = "sp".$row['subphaseID']."m".$rowM['materialID']."";
-											echo '
-											<tr>
-												<td><center> '.$itemnum.' </center></td>
-												<td> '.$rowM['materialName'].' </td>
-												<td> '.$rowM['actualDimension'].'  </td>
-												<td style = "text-align:right;"> '.$_SESSION['cart'][$row['subphaseName']][$ctr][1].' </td>
-												<td> '.strtoupper($rowU['unit']).' </td>
-												<form method = "post" action = "en_requestRS.php?p='.$phaseID.'">
-												<input type = "hidden" name = "matID" value = "'.$rowM['materialID'].'">
-												<input type = "hidden" name = "spID" value = "'.$row['subphaseID'].'">
-												<td><center><a href = "en_requestRS.php?p='.$phaseID.'"><button type = "submit" class="btn btn-social-icon btn-google" name = "deleteMat"><i class="fa fa-bitbucket"></i></button></a></center></td></form>
-											</tr>';
-											$itemnum ++;
-											$ctr ++;
-										}
+											echo'
+											<td>'.date_format($date,"m-d-Y").'</td>
+											<td> <a href = "wh_pullout1.php?r='.$row['rsNumber'].'"><button type="button" class="btn btn-block btn-primary">Select</button></a> </td>
+										</tr> ';
 									}
-								echo '		 
-									</tbody>
-								</table>
-								<hr>';
-							}
-							?></form>
-							<button type="button" style = "width:200px; margin:5px;" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-default">
-								Create Requisition Slip
-							</button>
-							<a href = "#"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
-							
-							<br>
-							<hr>
+									
+								?>
+																
+								</tbody>
+                            </table>
                        </div>
                     </div>
                 </div>    
@@ -828,35 +658,6 @@ if (isset($_GET['p'])){
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 
-<!-- Modals -->
-
-<div class="modal modal-default fade" id="modal-default" style="display: none;">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title"><b>Date Needed:</b></h4>
-              </div>
-			  <form action = "" method = "post">
-              <div class="modal-body">
-			  <input type = "date" class = "form-control" 
-			  <?php
-				echo 'min = "'.date("Y-m-d").'" ';
-			  ?>
-			  id = "dateNeeded" name = "dateNeeded" value = "" required>
-			  </div>
-              <div class="modal-footer">
-				<input type="submit" name = "createRS" class="btn btn-primary" value = "Submit">
-				</form>
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
-        </div>
-<!-- Modals -->
 
 <script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
@@ -864,16 +665,8 @@ if (isset($_GET['p'])){
 $(document).ready(function(){
 	$('#example2').DataTable();
 });
-
-
-$("#AddMats").click(function(){
-var smth = $("#materials option[value='" + $('#mats').val() + "']").attr('data-id');
-document.getElementById('matSec').value = smth;
-var smth1 = $("#subphases option[value='" + $('#subph').val() + "']").attr('data-id');
-document.getElementById('spSec').value = smth1;
-document.getElementById('InputMat').submit();
-});
 </script>
+
 
 </body>
 </html>
