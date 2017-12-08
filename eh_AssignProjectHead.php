@@ -1,11 +1,77 @@
+<?php
+//lagi ka maglalagay ng session_start(); sa unang line ng <?php mo
+//pati yung require_once('../mysql_connect.php');
+
+session_start();
+
+//pag na click si submit button which is name niya = 'submit' (dinefine ni sir sa html
+//as submit)
+if (isset($_POST['submit'])){
+
+//nagdeclare lang siya ng message variable for later
+$message=NULL;
+
+//pag walang laman yung productname field sa html ilalagay yung message sa $message
+//na nakalimutan mo mag enter ng product name
+
+//pag may laman ma sstore sa variable $productname yung inenter mong name ng product sa 
+//productname field (dinefine ni sir sa html yung field name as productname)
+ 
+ 
+ if (empty($_POST['projectHead'])){
+  $projectHead=NULL;
+  $message.='<p>You forgot to enter the project head!';
+ }else
+  $projectHead=$_POST['projectHead'];
+
+ 
+
+ //pag wala kang nakalimutan na ienter na field
+if(!isset($message)){
+
+//yung '../mysql_connect.php' yung directory ng mysql_connect.php mo 
+// .. means to go back one level
+require_once('mysql_connect.php');
+//mag sstore ka ng SQL query sa isang variable tapos
+//ipasok mo dun yung values ng bawat variable mo sa form
+//gamit ka {$variable} pag numerical
+//gamit ka '{$variable}' pag string
+//$result is just another variable
+//mysqli_query is a method na kung saan kailangan mo ng 
+//credentials ng db tapos yung papasok mong query
+//pag successful yan gagawa na siya ng record ng product
+//then ininsert ni sir yung values ng bawat variable mo sa form sa $message
+//para lang malaman mo na kung ano yung ininsert mong product record
+$query="insert into teammembers (projectCode,accountID,role) values ('{$_SESSION['projectCode']}',{$projectHead},'Project Head')";
+$result=mysqli_query($dbc,$query);
+
+$message="Project members for project code: " . $_SESSION['projectCode'];
+ 
+}
+}
+/*End of main Submit conditional*/
+
+if (isset($message)){
+ echo $_SESSION['projectCode'];
+ echo $projectHead;
+ echo '<font color="red">'.$message. '</font>';
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Sales Homepage</title>
+  <title> Assign Project Members | Weal Builders Inc. </title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
+  
+  <link rel ="stylesheet" type = "text/css" href ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link rel ="stylesheet" type = "text/css" href ="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
+  
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -14,8 +80,6 @@
   <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  
-  <link rel="stylesheet" href="dist/css/customs.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
@@ -154,7 +218,7 @@
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">Sales</font>
+          <font face="Open Sans" size="1" color="white">Admin</font>
         </div>
         <div class="pull-left info">
           
@@ -163,46 +227,172 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-		
         <li class="header">MAIN NAVIGATION</li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Notice to Proceed</span>
-            
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Note Accessories List</span>
-            
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-plus-circle"></i>
+            <span>Add</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="adminCreateClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
+            <li><a href="adminCreateEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
+            <li><a href="adminCreateMaterials.php"><i class="fa fa-circle-o"></i> Material</a></li>
+            <li><a href="adminCreateSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
+            <li><a href="adminCreateAddress.php"><i class="fa fa-circle-o"></i> Supplier Address</a></li>
+            <li><a href="adminAddUnitOfMeasurement.php"><i class="fa fa-circle-o"></i> Unit of Measurement</a></li>
+          </ul>
+        </li>
+        
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-minus-circle"></i>
+            <span>Deactivate</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="adminDeactivateClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
+            <li><a href="adminDeactivateEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
+            <li><a href="adminDeactivateMaterial.php"><i class="fa fa-circle-o"></i> Material</a></li>
+            <li><a href="adminDeactivateSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
+            <li><a href="adminDeactivateAddress.php"><i class="fa fa-circle-o"></i> Supplier Address</a></li>
+            <li><a href="adminDeactivateUnitOfMeasurement.php"><i class="fa fa-circle-o"></i> Unit of Measurement</a></li>
+          </ul>
+        </li>
+        
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-pencil-square-o"></i>
+            <span>Edit</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="adminEditClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
+            <li><a href="adminEditEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
+            <li><a href="adminEditMaterial.php"><i class="fa fa-circle-o"></i> Material</a></li>
+            <li><a href="adminEditSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
+          </ul>
+        </li>
+        
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>View</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="adminViewClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
+            <li><a href="adminViewEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
+            <li><a href="adminViewMaterial.php"><i class="fa fa-circle-o"></i> Material</a></li>
+            <li><a href="adminViewSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
+          </ul>
+        </li>
+        
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-reorder"></i> <span>Assign Approvals</span>
           </a>
         </li>
-		
-		
-		
-    </section>
+      </ul>
+
     <!-- /.sidebar -->
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <div class="box">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        
-      </section>
-  
-      <!-- MAIN CONTENT -->
-      <section class="content">
-        <!-- Small boxes (Stat box) -->
-        
-        <!-- /.row (main row) -->
-  
-      </section>
-	                      </div>
-      <!-- END OF MAIN CONTENT -->
+    <!-- Content Header (Page header) -->
+	
+	<div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="box">
+			<section class="content-header">
+			  <h1><b>
+				 Assign Project Members </b><br>
+				<small>Create a team and assign team members</small>
+			  </h1>
+			  <ol class="breadcrumb">
+				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+				<li class="active">Dashboard</li>
+			  </ol>
+			</section>
+                <div class="row">
+                    <div class="col-lg-12">
+					<br>
+					
+						<div class="row" style = "margin:10px;">
+						  <div class="col-xs-3">
+						  
+							<h4><b>Project Code: </b> <br>  <?php if(isset($_GET['submit'])){  $_SESSION['projectCode'] = $_GET['submit']; echo $_GET['submit'];} ?>
+							<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+							
+							
+								
+							
+							
+							
+							</h4> 
+						  </div>
+						  
+						  
+						</div>
+						<br>
+						<h4><b style= "margin:24px;"> Project Members </b></h4>
+						
+						<table style = "margin:24px;width:50%;" class = "table table-striped table-bordered">
+							<tr><th>Role</th><th>Name</th><th></th></tr>
+							<tr>
+								<td><b> Project Head </b></td>
+								<td>
+								
+								<select class="form-control" name="projectHead">
+							
+								<?php
+								require_once('mysql_connect.php');
+
+								$query="select * from employee join accounts on employee.accountID = accounts.accountID join ref_usertype on accounts.usertypeID = ref_usertype.usertypeID";
+								$result=mysqli_query($dbc,$query);
+								
+								while($row2=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+									echo "<option value={$row2['accountID']}>{$row2['firstName']} {$row2['lastName']} ({$row2['usertype']})</option>";
+								}
+								?>
+							
+							</select>
+								
+								</td>
+								<td><center></center></td>
+							</tr>
+							
+							
+							
+							
+						</table>
+						<div class="col-xs-7">
+							<a href = "eh_AssignProjectHead.php" ><button type="submit" name="submit" style = "margin:7px;" class="btn btn-success">Assign Members</button></a>
+							<a href = "eh_ProjectList.php" ><button type="button" name="x" style = "margin:7px;" class="btn btn-success">Back</button></a>
+						</div>
+						</form>
+						
+					</div>
+                </div>    
+            </div>
+        </div>
     </div>
   </div>
+  
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -445,5 +635,16 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
+
+<script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script type = "text/javascript">
+$(document).ready(function(){
+	$('#example2').DataTable();
+});
+</script>
+
+
 </body>
 </html>
