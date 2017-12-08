@@ -3,12 +3,13 @@
 require_once("mysql_connect.php");
 session_start();
 $dont = true;
-if (isset($_GET['pc'])){
-	$projectCode = $_GET['pc'];
-}
 
 if (isset($_GET['p'])){
 	$phaseID = $_GET['p'];
+	$query = "SELECT projectCode FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$projectCode = $row['projectCode'];
 }
 if (isset($_GET['r'])){
 	$rsID = $_GET['r'];

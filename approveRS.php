@@ -3,20 +3,132 @@
 require_once("mysql_connect.php");
 session_start();
 $dont = true;
-if (isset($_GET['p'])){
-	$phaseID = $_GET['p'];
+$_SESSION['accountID'] = 10000003;
+
+if (isset($_GET['r'])){
+	$rsID = $_GET['r'];
+	$notYet = true;
+	
+	$query = "SELECT subphaseID FROM rsdetails WHERE rsNumber = '".$rsID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$subphaseID = $row['subphaseID'];
+	
+	$query = "SELECT phaseID FROM subphases WHERE subphaseID = '".$subphaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$phaseID = $row['phaseID'];
+	
 	$query = "SELECT projectCode FROM phases WHERE phaseID = '".$phaseID."'";
 	$result = mysqli_query($dbc, $query);
 	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 	$projectCode = $row['projectCode'];
+	
+	$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if ($row['requestedBy'] != $_SESSION['accountID']){
+		if (!empty($row['recommendedBy'])){
+			if ($row['recommendedBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}else if (!empty($row['verifiedBy'])){
+			if ($row['verifiedBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}else if (!empty($row['approvedBy'])){
+			if ($row['approvedBy'] == $_SESSION['accountID']){
+				$notYet = false;
+			}
+		}
+	}else{
+		$notYet = false;
+	}
+	
+	$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '2' ";
+	$esql = mysqli_query($dbc, $sql);
+	$rsql = mysqli_num_rows($esql);
+	if ($rsql == 0){
+		$notYet = false;
+	}
+	
 }
+
+if (isset($_GET['st'])){
+	$stat = $_GET['st'];
+	if ($stat == "a"){
+		$message = '<div class="alert alert-success alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<h4><i class="icon fa fa-check"></i> Requisition Slip Approved!</h4>
+					You have successfully approved a Requisition Slip.
+				</div>';
+	}else{
+		$message = '<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<h4><i class="icon fa fa-ban"></i>Disapproved Requisition Slip!</h4>
+						Requisition Slip Disapproved!
+					</div>';
+	}
+}
+
+if (isset($_POST['recommend'])){
+	$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['recommendedBy'])){
+		$query1 = "UPDATE `requisitionslip` SET recommendedBy = '".$_SESSION['accountID']."' WHERE rsNumber = '".$rsID."'";
+		$result1 = mysqli_query($dbc, $query1);
+	}
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveRS.php?r=".$rsID."&st=a");
+	}
+}
+
+if (isset($_POST['verify'])){
+	$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['verifiedBy'])){
+		$query1 = "UPDATE `requisitionslip` SET verifiedBy = '".$_SESSION['accountID']."' WHERE rsNumber = '".$rsID."'";
+		$result1 = mysqli_query($dbc, $query1);
+	}
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveRS.php?r=".$rsID."&st=a");
+	}
+}
+
+if (isset($_POST['approve'])){
+	$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['approvedBy'])){
+		$query1 = "UPDATE `requisitionslip` SET approvedBy = '".$_SESSION['accountID']."' WHERE rsNumber = '".$rsID."'";
+		$result1 = mysqli_query($dbc, $query1);
+	}
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveRS.php?r=".$rsID."&st=a");
+	}
+}
+
+if (isset($_POST['disapproved'])){
+	$query1 = "UPDATE `requisitionslip` SET reason = '".$_POST['reason']."', statusID = '6', disapprovedBy = '".$_SESSION['accountID']."' WHERE rsNumber = '".$rsID."'";
+	$result1 = mysqli_query($dbc, $query1);
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveRS.php?r=".$rsID."&st=d");
+	}
+}
+
 
 ?>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Create Accessories List</title>
+  <title>Approve Requisition Slip</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   
@@ -256,7 +368,7 @@ if (isset($_GET['p'])){
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Create Accessories List</b><br>
+				Approve Requisition Slip</b><br>
 				<br>
 			  </h1>
 			  <ol class="breadcrumb">
@@ -264,16 +376,37 @@ if (isset($_GET['p'])){
 				<li class="active">Dashboard</li>
 			  </ol>
 			</section>
-			
-			<div class="alert alert-success alert-dismissable">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-				<h4><i class="icon fa fa-check"></i> SUCCESS!</h4>
-				You have successfully created an Accessories List.
-			</div>
+			<?php if (isset($message)){
+				echo $message;
+			}?>
                 <div class="row">
                     <div class="col-lg-12">
 					<br>
                         <div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-6">
+									<h2><b>R.S. Number:</b> <?php echo $rsID; 
+									
+									$queryB = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."';";
+									$resultB = mysqli_query($dbc, $queryB);
+									$rowB = mysqli_fetch_array($resultB, MYSQLI_ASSOC);
+									
+									?></h2>
+								</div>
+								<div class="col-xs-6">
+									<h2><b>Status: </b> <span class="label label-warning" style = "font-size:20px;">
+									
+									<?php
+									$querX = "SELECT * FROM ref_status WHERE statusID = '".$rowB['rsStatusID']."' ";
+									$resulX = mysqli_query($dbc, $querX);
+									$roX = mysqli_fetch_array($resulX, MYSQLI_ASSOC);
+									echo ucfirst($roX['status']);
+
+									?>
+									
+									</span> </h2> <h3></h3>
+								</div>
+							</div>
 							<div class="row">
 								<div class="col-xs-6">
 									<label><h4><b>Project Code: <?php echo $projectCode; ?> </b></h4></label>
@@ -284,6 +417,7 @@ if (isset($_GET['p'])){
 									$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
 									$result = mysqli_query($dbc, $query);
 									$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+									
 									echo $row['phaseName'];
 								?>
 								</h4>
@@ -300,15 +434,14 @@ if (isset($_GET['p'])){
 								echo $rowP['projectName']; ?>
 							  </div>
 							  <div class="col-xs-6">
-								<b>Location: </b> <?php echo $rowP['whLocation']; ?>
 							  </div>
 							</div>
 							
 							<div class="row">
 							  <div class="col-xs-6">
-								<b>Prepared by: </b> 
+								<b>Requested by: </b> 
 								<?php 
-									$queryE = "SELECT * FROM employee WHERE accountID = '".$row['preparedBy']."'";
+									$queryE = "SELECT * FROM employee WHERE accountID = '".$rowB['requestedBy']."'";
 									$resultE = mysqli_query($dbc, $queryE);
 									$rowE = mysqli_fetch_array($resultE, MYSQLI_ASSOC);
 									
@@ -316,10 +449,19 @@ if (isset($_GET['p'])){
 								?>
 							  </div>
 							  <div class="col-xs-6">
-								<b>Date Created: </b> <?php echo $row['dateCreated']; ?>
+								<b>Date Created: </b> <?php echo $rowB['dateRequested']; ?>
 							  </div>
 							</div>
-
+							
+							<div class="row">
+							  <div class="col-xs-6">
+								<b>Location: </b> <?php echo $rowP['whLocation']; ?>
+							  </div>
+							  <div class="col-xs-6">
+								<b>Date Needed: </b> <?php echo $rowB['dateNeeded']; ?>
+							  </div>
+							</div>
+							
 							<br>
 							
 							<!-- Per subphase -->
@@ -328,7 +470,7 @@ if (isset($_GET['p'])){
 							$result = mysqli_query($dbc, $query);
 							
 							while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-								$queryA = "SELECT * FROM sp_materials WHERE subphaseID = '".$row['subphaseID']."'";
+								$queryA = "SELECT * FROM rsdetails WHERE subphaseID = '".$row['subphaseID']."'";
 								$resultA = mysqli_query($dbc, $queryA);
 								
 								$itemnum = 1;
@@ -377,9 +519,87 @@ if (isset($_GET['p'])){
 									</tbody>
 								</table>';
 							}
-							?></form>
-							<a href = "#.html"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
+							$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."';";
+							$result = mysqli_query($dbc, $query);
+							$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+							if ($row['statusID'] == 5 || $row['statusID'] == 6){
+								$stas = true;
+							}else{
+								$stas = false;
+							}
 							
+							$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '2' ";
+							$esql = mysqli_query($dbc, $sql);
+
+							$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+							$result = mysqli_query($dbc, $query);
+							$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+															
+							while ($rsql = mysqli_fetch_array($esql, MYSQLI_ASSOC)){
+								if (empty($row['recommendedBy']) && $rsql['approveID'] == '5'){
+									
+								}else if (empty($row['verifiedBy']) && $rsql['approveID'] == '2'){
+								
+								}else if (empty($row['approvedBy']) && $rsql['approveID'] == '3'){
+									
+								}else{
+									$notYet = false;
+								}
+							}
+							
+							if (!isset($stat) && !$stas && $notYet){
+								echo '
+								<form action = "approveRS.php?&r='.$rsID.'" method = "post">
+								<input type="submit" name = "';
+								
+								$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '2' ";
+								$esql = mysqli_query($dbc, $sql);
+	
+								$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+								$result = mysqli_query($dbc, $query);
+								$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+															
+								while ($rsql = mysqli_fetch_array($esql, MYSQLI_ASSOC)){
+									if (empty($row['recommendedBy']) && $rsql['approveID'] == '5'){
+										echo "recommend";
+									}else if (empty($row['verifiedBy']) && $rsql['approveID'] == '2'){
+										echo "verify";
+									}else if (empty($row['approvedBy']) && $rsql['approveID'] == '3'){
+										echo "approve";
+									}
+								}
+								
+								echo'" style = "width:150px; margin:5px;" class="btn btn-success pull-right" value = "'; 
+								
+								$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '2' ";
+								$esql = mysqli_query($dbc, $sql);
+	
+								$query = "SELECT * FROM requisitionslip WHERE rsNumber = '".$rsID."'";
+								$result = mysqli_query($dbc, $query);
+								$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+																
+								while ($rsql = mysqli_fetch_array($esql, MYSQLI_ASSOC)){
+									if (empty($row['recommendedBy']) && $rsql['approveID'] == '5'){
+										echo "Recommend";
+									}else if (empty($row['verifiedBy']) && $rsql['approveID'] == '2'){
+										echo "Verify";
+									}else if (empty($row['approvedBy']) && $rsql['approveID'] == '3'){
+										echo "Approve";
+									}
+								}
+								
+								echo'">
+								</form>
+								<button type="button" style = "width:150px; margin:5px;" class="btn btn-danger pull-right" data-toggle="modal" data-target="#modal-danger">
+									Disapprove
+								</button>';
+							}
+							else{
+								echo '<a href = "#.html"><button type="button" style = "width:100px; margin:5px;" class="btn btn-warning pull-right">Back</button></a>
+								';
+							}
+							
+							?>
 							<br>
 							<hr>
                        </div>
@@ -632,6 +852,31 @@ if (isset($_GET['p'])){
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
+<!-- Modals -->
+<div class="modal modal-danger fade" id="modal-danger" style="display: none;">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><b>Reason for Disapproval</b></h4>
+              </div>
+			  <form action = "" method = "post">
+              <div class="modal-body">
+			  <input type = "text" id = "reason" name = "reason" minlength = "10" class="form-control" placeholder="Enter Reason..." required>
+              </div>
+              <div class="modal-footer">
+				<input type="submit" name = "disapproved" class="btn btn-outline" value = "Submit">
+				</form>
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+<!-- Modals -->
 
 <script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>

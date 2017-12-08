@@ -5,12 +5,14 @@ session_start();
 $_SESSION['accountID'] = 10000001;
 
 $dont = true;
-if (isset($_GET['pc'])){
-	$projectCode = $_GET['pc'];
-}
 
 if (isset($_GET['p'])){
 	$phaseID = $_GET['p'];
+	$query = "SELECT projectCode FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$projectCode = $row['projectCode'];
+	
 }
 
 if (isset($_GET['d'])){
@@ -128,7 +130,7 @@ if (isset($_POST['create'])){
 	$dont = false;
 	
 	if ($status){
-		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/en_createAL1.php?pc=".$projectCode."&p=".$phaseID."");
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/en_createAL1.php?p=".$phaseID."");
 	}
 }
 
@@ -439,7 +441,7 @@ if (isset($_GET['p'])){
 							  </div>
 							</div>
 							<br>
-							<form action = "<?php echo "en_createAL.php?pc=".$projectCode."&p=".$phaseID.""; ?>" method = "post" id = "InputMat" name = "InputMat">
+							<form action = "<?php echo "en_createAL.php?p=".$phaseID.""; ?>" method = "post" id = "InputMat" name = "InputMat">
 							<table class = "table table-condensed" style = "width:90%">
 							<tr>
 							<td><label>Input Materials</label><input type = "hidden" id = "matSec" name = "matSec" value = "">
@@ -490,8 +492,8 @@ if (isset($_GET['p'])){
 							</table>
 							</form>
 							<h4><label>Current Materials:</label></h4>
-							<a href = "<?php echo "en_createeditAL.php?pc=".$projectCode."&p=".$phaseID.""; ?>"><button class = "btn btn-primary pull-right">Edit Quantity</button></a><br>
-							<form action = "<?php echo "en_createAL.php?pc=".$projectCode."&p=".$phaseID.""; ?>" method = "post" id = "InputMat" name = "InputMat">
+							<a href = "<?php echo "en_createeditAL.php?p=".$phaseID.""; ?>"><button class = "btn btn-primary pull-right">Edit Quantity</button></a><br>
+							<form action = "<?php echo "en_createAL.php?p=".$phaseID.""; ?>" method = "post" id = "InputMat" name = "InputMat">
 								
 							<!-- Per subphase -->
 							<?php
@@ -536,10 +538,10 @@ if (isset($_GET['p'])){
 												<td> '.$rowM['actualDimension'].'  </td>
 												<td style = "text-align:right;"> '.$_SESSION['cart'][$row['subphaseName']][$ctr][1].' </td>
 												<td> '.strtoupper($rowU['unit']).' </td>
-												<form method = "post" action = "en_createAL.php?pc='.$projectCode.'&p='.$phaseID.'">
+												<form method = "post" action = "en_createAL.php?p='.$phaseID.'">
 												<input type = "hidden" name = "matID" value = "'.$rowM['materialID'].'">
 												<input type = "hidden" name = "spID" value = "'.$row['subphaseID'].'">
-												<td><center><a href = "en_createAL.php?pc='.$projectCode.'&p='.$phaseID.'"><button type = "submit" class="btn btn-social-icon btn-google" name = "deleteMat"><i class="fa fa-bitbucket"></i></button></a></center></td></form>
+												<td><center><a href = "en_createAL.php?p='.$phaseID.'"><button type = "submit" class="btn btn-social-icon btn-google" name = "deleteMat"><i class="fa fa-bitbucket"></i></button></a></center></td></form>
 											</tr>';
 											$itemnum ++;
 											$ctr ++;

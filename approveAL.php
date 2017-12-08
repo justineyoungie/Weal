@@ -4,9 +4,6 @@ require_once("mysql_connect.php");
 session_start();
 $dont = true;
 $_SESSION['accountID'] = 10000002;
-if (isset($_GET['pc'])){
-	$projectCode = $_GET['pc'];
-}
 
 if (isset($_GET['p'])){
 	$phaseID = $_GET['p'];
@@ -15,6 +12,7 @@ if (isset($_GET['p'])){
 	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
 	$result = mysqli_query($dbc, $query);
 	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$projectCode = $row['projectCode'];
 	
 	if ($row['preparedBy'] != $_SESSION['accountID']){
 		if (!empty($row['checkedBy'])){
@@ -37,6 +35,14 @@ if (isset($_GET['p'])){
 	}else{
 		$notYet = false;
 	}
+	
+	$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '1' ";
+	$esql = mysqli_query($dbc, $sql);
+	$rsql = mysqli_num_rows($esql);
+	if ($rsql == 0){
+		$notYet = false;
+	}
+	
 	
 }
 
@@ -61,11 +67,11 @@ if (isset($_POST['disapproved'])){
 	$query1 = "UPDATE `phases` SET reason = '".$_POST['reason']."', statusID = '6', disapprovedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
 	$result1 = mysqli_query($dbc, $query1);
 	if ($result1){
-		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?pc=".$projectCode."&p=".$phaseID."&st=d");
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?p=".$phaseID."&st=d");
 	}
 }
 
-if (isset($_POST['approved'])){
+if (isset($_POST['check'])){
 	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
 	$result = mysqli_query($dbc, $query);
 	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -73,22 +79,54 @@ if (isset($_POST['approved'])){
 	if (empty($row['checkedBy'])){
 		$query1 = "UPDATE `phases` SET checkedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
 		$result1 = mysqli_query($dbc, $query1);
-	}else if (empty($row['verifiedBy'])){
+	}
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?p=".$phaseID."&st=a");
+	}
+}
+
+if (isset($_POST['verify'])){
+	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['verifiedBy'])){
 		$query1 = "UPDATE `phases` SET verifiedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
 		$result1 = mysqli_query($dbc, $query1);
-	}else if (empty($row['approvedBy'])){
+	}
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?p=".$phaseID."&st=a");
+	}
+}
+
+if (isset($_POST['approve'])){
+	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['approvedBy'])){
 		$query1 = "UPDATE `phases` SET approvedBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
 		$result1 = mysqli_query($dbc, $query1);
-	}else if (empty($row['noteBy'])){
+	}
+	if ($result1){
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?p=".$phaseID."&st=a");
+	}
+}
+
+if (isset($_POST['note'])){
+	$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	
+	if (empty($row['noteBy'])){
 		$query1 = "UPDATE `phases` SET noteBy = '".$_SESSION['accountID']."' WHERE phaseID = '".$phaseID."'";
 		$result1 = mysqli_query($dbc, $query1);
 		
 		$queryU = "UPDATE `phases` SET statusID = '5' WHERE phaseID = '".$phaseID."'";
 		$resultU = mysqli_query($dbc, $queryU);
 	}
-	
 	if ($result1){
-		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?pc=".$projectCode."&p=".$phaseID."&st=a");
+		header("Location: http://".$_SERVER['HTTP_HOST'].  dirname($_SERVER['PHP_SELF'])."/approveAL.php?p=".$phaseID."&st=a");
 	}
 }
 
@@ -466,10 +504,74 @@ if (isset($_POST['approved'])){
 							}else{
 								$stas = false;
 							}
+							
+							$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '1' ";
+							$esql = mysqli_query($dbc, $sql);
+
+							$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+							$result = mysqli_query($dbc, $query);
+							$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+														
+							while ($rsql = mysqli_fetch_array($esql, MYSQLI_ASSOC)){
+								if (empty($row['checkedBy']) && $rsql['approveID'] == '1'){
+								
+								}else if (empty($row['verifiedBy']) && $rsql['approveID'] == '2'){
+									
+								}else if (empty($row['approvedBy']) && $rsql['approveID'] == '3'){
+									
+								}else if (empty($row['noteBy']) && $rsql['approveID'] == '4'){
+									
+								}else{
+									$notYet = false;
+								}
+							}
+							
 							if (!isset($stat) && !$stas && $notYet){
 								echo '
-								<form action = "approveAL.php?pc='.$projectCode.'&p='.$phaseID.'" method = "post">
-								<input type="submit" name = "approved" style = "width:150px; margin:5px;" class="btn btn-success pull-right" value = "Approve">
+								<form action = "approveAL.php?&p='.$phaseID.'" method = "post">
+								<input type="submit" name = "';
+								
+								$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '1' ";
+								$esql = mysqli_query($dbc, $sql);
+	
+								$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+								$result = mysqli_query($dbc, $query);
+								$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+															
+								while ($rsql = mysqli_fetch_array($esql, MYSQLI_ASSOC)){
+									if (empty($row['checkedBy']) && $rsql['approveID'] == '1'){
+										echo "check";
+									}else if (empty($row['verifiedBy']) && $rsql['approveID'] == '2'){
+										echo "verify";
+									}else if (empty($row['approvedBy']) && $rsql['approveID'] == '3'){
+										echo "approve";
+									}else if (empty($row['noteBy']) && $rsql['approveID'] == '4'){
+										echo "note";
+									}
+								}
+								
+								echo'" style = "width:150px; margin:5px;" class="btn btn-success pull-right" value = "'; 
+								
+								$sql = "SELECT * FROM docu_approval where accountID = '".$_SESSION['accountID']."' AND docutypeID = '1' ";
+								$esql = mysqli_query($dbc, $sql);
+	
+								$query = "SELECT * FROM phases WHERE phaseID = '".$phaseID."'";
+								$result = mysqli_query($dbc, $query);
+								$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+															
+								while ($rsql = mysqli_fetch_array($esql, MYSQLI_ASSOC)){
+									if (empty($row['checkedBy']) && $rsql['approveID'] == '1'){
+										echo "Check";
+									}else if (empty($row['verifiedBy']) && $rsql['approveID'] == '2'){
+										echo "Verify";
+									}else if (empty($row['approvedBy']) && $rsql['approveID'] == '3'){
+										echo "Approve";
+									}else if (empty($row['noteBy']) && $rsql['approveID'] == '4'){
+										echo "Note";
+									}
+								}
+								
+								echo'">
 								</form>
 								<button type="button" style = "width:150px; margin:5px;" class="btn btn-danger pull-right" data-toggle="modal" data-target="#modal-danger">
 									Disapprove
@@ -745,7 +847,7 @@ if (isset($_POST['approved'])){
               </div>
 			  <form action = "" method = "post">
               <div class="modal-body">
-			  <input type = "text" id = "reason" name = "reason" class="form-control" placeholder="Enter Reason...">
+			  <input type = "text" id = "reason" name = "reason" minlength = "10" class="form-control" placeholder="Enter Reason..." required>
               </div>
               <div class="modal-footer">
 				<input type="submit" name = "disapproved" class="btn btn-outline" value = "Submit">

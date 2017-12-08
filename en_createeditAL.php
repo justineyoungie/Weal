@@ -3,12 +3,13 @@
 require_once("mysql_connect.php");
 session_start();
 $dont = true;
-if (isset($_GET['pc'])){
-	$projectCode = $_GET['pc'];
-}
 
 if (isset($_GET['p'])){
 	$phaseID = $_GET['p'];
+	$query = "SELECT projectCode FROM phases WHERE phaseID = '".$phaseID."'";
+	$result = mysqli_query($dbc, $query);
+	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$projectCode = $row['projectCode'];
 }
 
 ?>
@@ -288,7 +289,7 @@ if (isset($_GET['p'])){
 							<h4><label>Current Materials:</label></h4>
 							
 							
-							<form action = '<?php echo "en_createAL.php?pc=".$projectCode."&p=".$phaseID."&d=f"; ?>' method = "post" id = "InputMat" name = "InputMat">
+							<form action = '<?php echo "en_createAL.php?p=".$phaseID."&d=f"; ?>' method = "post" id = "InputMat" name = "InputMat">
 							
 							<!-- Per subphase -->
 							<?php
@@ -325,7 +326,7 @@ if (isset($_GET['p'])){
 											}
 											
 											$fieldName = "sp".$row['subphaseID']."m".$rowM['materialID']."";
-											echo $fieldName;
+											
 											echo '
 											<tr>
 												<td><center> '.$itemnum.' </center></td>
