@@ -1,9 +1,17 @@
+<?php
+//lagi ka maglalagay ng session_start(); sa unang line ng <?php mo
+//pati yung require_once('../mysql_connect.php');
+
+session_start();
+/*End of main Submit conditional*/
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>General Manager Homepage</title>
+  <title>Engineering Homepage</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -154,7 +162,7 @@
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">General Manager</font>
+          <font face="Open Sans" size="1" color="white">Engineer</font>
         </div>
         <div class="pull-left info">
           
@@ -167,18 +175,65 @@
         <li class="header">MAIN NAVIGATION</li>
 		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-male"></i> <span>Recommend Suppliers </span>
+            <i class="fa fa-edit"></i> <span>Create Bill of Materials</span>
+            
+          </a>
+        </li>
+
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create Accessories List <b><font size="3">(AL)</b></font></span>
             
           </a>
         </li>
 		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-male"></i> <span>Confirm Suppliers</span>
+            <i class="fa fa-edit"></i> <span>Adjust AL</span>
             
           </a>
         </li>
-		
-		
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-check"></i> <span>Check AL</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-check"></i> <span>Approve AL</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create Requisition Slip <b><font size="3">(RS)</b></font></span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-clone"></i> <span>Compare AL with RS</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-check"></i> <span>Verify Purchase Order</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create Whereabouts Slip</span>
+            
+          </a>
+        </li>
+		<li>
+          <a href="pages/widgets.html">
+            <i class="fa fa-edit"></i> <span>Create Transfer Request</span>
+            
+          </a>
+        </li>
 		
     </section>
     <!-- /.sidebar -->
@@ -190,13 +245,238 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         
+		
+		
       </section>
   
       <!-- MAIN CONTENT -->
       <section class="content">
         <!-- Small boxes (Stat box) -->
         
-        <!-- /.row (main row) -->
+		
+		
+		<div class="col-lg-6">
+		
+		
+		
+		<!-- START OF TABS -->
+		
+		
+          <!-- Custom Tabs -->
+          <div class="nav-tabs-custom">
+			
+			<?php
+			echo $_SESSION['accountID'];
+			
+			require_once('mysql_connect.php');
+			
+			$query2="select * from teammembers where accountID = '" . $_SESSION['accountID'] ."' and role = 'Project Head'"; 
+			$result2=mysqli_query($dbc,$query2);
+			
+			
+			if($row2=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+				$_SESSION['projectCode'] = $row2['projectCode'];
+				
+				echo "<!-- START OF TABS -->
+				<ul class='nav nav-tabs'>
+				  <li class='active'><a href='#tab_1' data-toggle='tab'>Project 1: {$_SESSION['projectCode']}</a></li>
+				  
+				  <li class='pull-right'><a href='#' class='text-muted'><i class='fa fa-gear'></i></a></li>
+				</ul>
+				<!-- END OF TABS -->";
+			
+			
+				require_once('mysql_connect.php');
+				
+				$query2="select * from projects where projectCode = '" . $_SESSION['projectCode'] ."'"; 
+				$result2=mysqli_query($dbc,$query2);
+				
+				if($row=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+					if($row['pStatusID'] == 4){
+					echo "
+					
+					<div class='tab-content'>
+					
+						<!-- START OF TAB CONTENT -->
+					
+					
+					  <div class='tab-pane active' id='tab_1'>
+							<!-- START OF WIDGET -->
+							
+							  <div class='info-box'>
+								<span class='info-box-icon bg-green'><i class='fa fa-newspaper-o'></i></span>
+
+								<div class='info-box-content'>
+								
+								  <span class='info-box-text'><font size=5>You are the Project Head for Project Code: <b><font size=5>{$_SESSION['projectCode']}</font></b></font></span>
+								  <span class='info-box-number'><a href='en_AssignProjectMembers.php'><button  style='width: 100%' type='button' class='btn btn-success btn-fill' >ASSIGN TEAM MEMBERS</button></a></span>
+								
+								</div>
+								<!-- /.info-box-content -->
+							  </div>
+							  <!-- /.info-box -->
+							
+							
+							<!-- /.col -->
+							
+							<!-- END OF WIDGETS -->
+					  </div>
+					
+					
+					<!-- END OF TAB CONTENT -->";}
+					
+					elseif($row['pStatusID'] != 4){
+						echo "<font size=5><b>You have nothing to do!</b></font>";
+					}
+				}
+			
+			}?>	
+				
+				<!-- FOR OFFICE ENGINEERS -->
+				
+				<?php
+			require_once('mysql_connect.php');
+			
+			$query2="select * from teammembers where accountID = '" . $_SESSION['accountID'] ."' and role = 'Office Engineer'"; 
+			$result2=mysqli_query($dbc,$query2); 
+			
+			
+			if($row2=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+				$_SESSION['projectCode'] = $row2['projectCode'];
+				
+				echo "<!-- START OF TABS -->
+				<ul class='nav nav-tabs'>
+				  <li class='active'><a href='#tab_1' data-toggle='tab'>Project 1: {$_SESSION['projectCode']}</a></li>
+				  
+				  <li class='pull-right'><a href='#' class='text-muted'><i class='fa fa-gear'></i></a></li>
+				</ul>
+				<!-- END OF TABS -->";
+			
+			
+				require_once('mysql_connect.php');
+				
+				$query2="select * from projects where projectCode = '" . $_SESSION['projectCode'] ."'"; 
+				$result2=mysqli_query($dbc,$query2);
+				
+				if($row=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+					if($row['pStatusID'] == 14){
+					echo "
+					
+					<div class='tab-content'>
+					
+						<!-- START OF TAB CONTENT -->
+					
+					
+					  <div class='tab-pane active' id='tab_1'>
+							<!-- START OF WIDGET -->
+							
+							  <div class='info-box'>
+								<span class='info-box-icon bg-green'><i class='fa fa-newspaper-o'></i></span>
+
+								<div class='info-box-content'>
+								
+								  <span class='info-box-text'><font size=5>Time to make an Accessories List for Project Code: <b><font size=5>{$_SESSION['projectCode']}</font></b></font></span>
+								  <span class='info-box-number'><a href='en_createAL.php'><button  style='width: 100%' type='button' class='btn btn-success btn-fill' >CREATE AL</button></a></span>
+								
+								</div>
+								<!-- /.info-box-content -->
+							  </div>
+							  <!-- /.info-box -->
+							
+							
+							<!-- /.col -->
+							
+							<!-- END OF WIDGETS -->
+					  </div>
+					
+					
+					<!-- END OF TAB CONTENT -->";}
+					
+					elseif($row['pStatusID'] != 14){
+						echo "<font size=5><b>You have nothing to do!</b></font>";
+					}
+				}
+			
+			}?>	
+			
+			<!-- FOR DOCU APPROVING ENGINEERS -->
+				
+				<?php
+			require_once('mysql_connect.php');
+			
+			$query2="select * from docu_approval where accountID = '" . $_SESSION['accountID'] ."' and docutypeID = 1"; 
+			$result2=mysqli_query($dbc,$query2); 
+			
+			
+			if($row2=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+				$_SESSION['projectCode'] = $row2['projectCode'];
+				
+				echo "<!-- START OF TABS -->
+				<ul class='nav nav-tabs'>
+				  <li class='active'><a href='#tab_1' data-toggle='tab'>Project 1: {$_SESSION['projectCode']}</a></li>
+				  
+				  <li class='pull-right'><a href='#' class='text-muted'><i class='fa fa-gear'></i></a></li>
+				</ul>
+				<!-- END OF TABS -->";
+			
+			
+				require_once('mysql_connect.php');
+				
+				$query2="select * from projects where projectCode = '" . $_SESSION['projectCode'] ."'"; 
+				$result2=mysqli_query($dbc,$query2);
+				
+				if($row=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+					if($row['pStatusID'] == 14){
+					echo "
+					
+					<div class='tab-content'>
+					
+						<!-- START OF TAB CONTENT -->
+					
+					
+					  <div class='tab-pane active' id='tab_1'>
+							<!-- START OF WIDGET -->
+							
+							  <div class='info-box'>
+								<span class='info-box-icon bg-green'><i class='fa fa-newspaper-o'></i></span>
+
+								<div class='info-box-content'>
+								
+								  <span class='info-box-text'><font size=5>Time to approve an Accessories List for: <b><font size=5>{$_SESSION['projectCode']}</font></b></font></span>
+								  <span class='info-box-number'><a href='en_createAL.php'><button  style='width: 100%' type='button' class='btn btn-success btn-fill' >APPROVE AL</button></a></span>
+								
+								</div>
+								<!-- /.info-box-content -->
+							  </div>
+							  <!-- /.info-box -->
+							
+							
+							<!-- /.col -->
+							
+							<!-- END OF WIDGETS -->
+					  </div>
+					
+					
+					<!-- END OF TAB CONTENT -->";}
+					
+					elseif($row['pStatusID'] != 14){
+						echo "<font size=5><b>You have nothing to do!</b></font>";
+					}
+				}
+			
+			}?>	
+			
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+		
+		<!-- END OF TABS -->
+		
+		<!-- /.row (main row) -->
   
       </section>
 	                      </div>

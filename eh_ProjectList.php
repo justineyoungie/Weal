@@ -1,11 +1,28 @@
+<?php
+//lagi ka maglalagay ng session_start(); sa unang line ng <?php mo
+//pati yung require_once('../mysql_connect.php');
+
+session_start();
+
+//pag na click si submit button which is name niya = 'submit' (dinefine ni sir sa html
+//as submit)
+if (isset($_POST['submit'])){
+
+  header("Location: eh_assignProjectHead.php"); /* Redirect browser */
+	exit();
+ //pag wala kang nakalimutan na ienter na field
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Indicate Price of Materials</title>
+  <title>AdminLTE 2 | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  
   
   <link rel ="stylesheet" type = "text/css" href ="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <link rel ="stylesheet" type = "text/css" href ="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
@@ -348,8 +365,8 @@
             <div class="box">
 			<section class="content-header">
 			  <h1><b>
-				Accessories List</b><br>
-				<small> Indicate price of materials </small>
+				Project List</b><br>
+				<small>Select the project to assign members</small>
 			  </h1>
 			  <ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -360,209 +377,58 @@
                     <div class="col-lg-12">
 					<br>
                         <div class="col-xs-12">
-							<label><h4><b>Project Code: FCS PO25/17V</b></h4></label>
-							<label class = "col-xs-4 pull-right"><h4><b>Type:</b> CW-AL </h4></label>
-							
-							
-							<div class="row">
-							  <div class="col-xs-8">
-								<b>Project Name: </b>FCS - Freshline - Chicken Processing Plant
-							  </div>
-							  <div class="col-xs-4">
-								<b>Location: </b> Porac, Pampanga
-							  </div>
-							</div>
-							
-							<div class="row">
-							  <div class="col-xs-4">
-								<b>Department: </b> Engineering
-							  </div>
-							  <div class="col-xs-4"></div>
-							  
-							  <div class="col-xs-4">
-								<b>Date Created: </b> September 24, 2015
-							  </div>
-							</div>
-							
-							
-							<table class = "table table-striped table-bordered" style = "width:100%">
-							<tr>
-							  <th>Items</th>
-							  <th>Materials</th>
-							  <th>Actual Dimension</th>
-							  <th>Quantity</th>
-							  <th>Unit</th>
-							  <th>Stock Availability</th>
-							  <th>Buy Initial</th>
-							  <th>Deadline Initial</th>
-							  <th>Price Per Unit</th>
-							</tr>
-							<tr>
-							  <td>1</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>2</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>3</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>4</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>5</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-success">AVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>6</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>7</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>8</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>9</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-danger">UNAVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-							<tr>
-							  <td>10</td>
-							  <td>RSB G40</td>
-							  <td>20mm x 6m</td>
-							  <td>600</td>
-							  <td>pcs</td>
-							  <td><center><span class="label label-success">AVAILABLE</span></center></td>
-							  <td>299</td>
-							  <td>04 Jul 2017</td>
-							  <td>
-							  <div class = "input-group">
-							  <span class="input-group-addon">PHP</span></i></span><input type="number" min = 0 class="form-control" style = "width:200px;" placeholder="Enter Price">
-							  </div>
-							  </td>
-							</tr>
-							
-						  </table>
+						<form style="height: 250px" action="eh_assignProjectHead.php" method="get">
+                          <table id="example2" class="table table-bordered table-hover">
 						  
-						  <a href = "createAL2.html"><input type="submit" class="btn btn-primary pull-right" value = "Submit Prices"></a>
-						  <br>
-						  <hr>
+						  <div class="col-xs-6 form-group">
+                           
+							
+							<thead>
+							<tr>
+                              <th>Project Code</th>
+							  <th>Project Name</th>
+							  <th>Warehouse Location</th>
+							  <th>Client Name</th>
+							  <th>Project Status</th>
+							  <th>Option</th>
+                            </tr>
+							
+							</thead>
+							
+							<tbody>
+							
+							
+							
+							<?php
+								require_once('mysql_connect.php');
+
+								$query="select * from projects join clients on projects.clientID = clients.clientID join ref_status on projects.pStatusID = ref_status.statusID";
+								$result=mysqli_query($dbc,$query);
+								
+								
+								while($row=mysqli_fetch_array($result,MYSQLI_ASSOC)){
+									echo "<tr>
+									
+									<td>{$row['projectCode']}</td>
+									<td>{$row['projectName']}</td>
+									<td>{$row['whLocation']}</td>
+									<td>{$row['clientName']}</td>
+									<td>{$row['status']}</td>
+									<td><button value={$row['projectCode']} type='submit' name='submit'>ASSIGN PROJECT HEAD</td>
+									
+									</tr>
+									
+									
+									";
+									
+									
+								}
+							?>
+							</tbody>
+                          </table>
+						  
                        </div>
+					   </form>
                     </div>
                 </div>    
             </div>
@@ -813,6 +679,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 
+
 <script type = "text/javascript" src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type = "text/javascript" src = "https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script type = "text/javascript">
@@ -820,6 +687,7 @@ $(document).ready(function(){
 	$('#example2').DataTable();
 });
 </script>
+
 
 </body>
 </html>

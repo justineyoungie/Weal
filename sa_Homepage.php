@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Purchasing Homepage</title>
+  <title>Sales Homepage</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -154,7 +154,7 @@
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">Purchasing</font>
+          <font face="Open Sans" size="1" color="white">Sales</font>
         </div>
         <div class="pull-left info">
           
@@ -167,53 +167,18 @@
         <li class="header">MAIN NAVIGATION</li>
 		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Suppliers</span>
+            <i class="fa fa-edit"></i> <span>Create Notice to Proceed</span>
             
           </a>
         </li>
 		<li>
           <a href="pages/widgets.html">
-            <i class="fa fa-male"></i> <span>Create Excel Price Summary</span>
+            <i class="fa fa-edit"></i> <span>Note Accessories List</span>
             
           </a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-hand-pointer-o"></i> <span>Select Supplier for Purchasing</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create List of Needed Materials</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Input Prices of Needed Materials</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Purchase Order</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Record Delivery Method</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Project Turnover</span>
-            
-          </a>
-        </li>
-      </ul>
+		
+		
 		
     </section>
     <!-- /.sidebar -->
@@ -275,8 +240,8 @@
 
 						<div class="info-box-content">
 						
-						  <span class="info-box-text"><font size=5>Generate Needed Materials for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
-						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >GENERATE NEEDED MATERIALS</button></a></span>
+						  <span class="info-box-text"><font size=5>Create a Project Turnver (PT) for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
+						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >CREATE PT</button></a></span>
 						
 						</div>
 						<!-- /.info-box-content -->
@@ -302,8 +267,8 @@
 
 						<div class="info-box-content">
 						
-						  <span class="info-box-text"><font size=5>Input Prices of Suppliers for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
-						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >INPUT PRICES</button></a></span>
+						  <span class="info-box-text"><font size=5>Create a Project Turnover (PT) for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
+						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >CREATE PT</button></a></span>
 						
 						</div>
 						<!-- /.info-box-content -->
@@ -329,8 +294,8 @@
 
 						<div class="info-box-content">
 						
-						  <span class="info-box-text"><font size=5>Generate Needed Materials for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
-						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >GENERATE NEEDED MATERIALS</button></a></span>
+						  <span class="info-box-text"><font size=5>Create a Project Turnover (PT) for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
+						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >CREATE PT</button></a></span>
 						
 						</div>
 						<!-- /.info-box-content -->
@@ -356,7 +321,6 @@
 		<!-- END OF TABS -->
 		
 		<!-- /.row (main row) -->
-  
   
       </section>
 	                      </div>

@@ -228,6 +228,7 @@
       </section>
   
       <!-- MAIN CONTENT -->
+      <!-- MAIN CONTENT -->
       <section class="content">
         <!-- Small boxes (Stat box) -->
         
@@ -242,109 +243,74 @@
 		
           <!-- Custom Tabs -->
           <div class="nav-tabs-custom">
-			<!-- START OF TABS -->
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#tab_1" data-toggle="tab">Project 1: Jollibee</a></li>
-              <li><a href="#tab_2" data-toggle="tab">Project 2: Mcdo</a></li>
-              <li><a href="#tab_3" data-toggle="tab">Project 3: Farm</a></li>
-              <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                  Dropdown <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                  <li role="presentation" class="divider"></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                </ul>
-              </li>
-              <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
-            </ul>
-			<!-- END OF TABS -->
 			
-            <div class="tab-content">
+			<?php
+			echo $_SESSION['accountID'];
 			
-				<!-- START OF TAB CONTENT -->
+			require_once('mysql_connect.php');
+			
+			$query2="select * from teammembers where accountID = '" . $_SESSION['accountID'] ."' and role = 'Project Head'"; 
+			$result2=mysqli_query($dbc,$query2);
+			
+			
+			if($row2=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+				$_SESSION['projectCode'] = $row2['projectCode'];
 				
-              <div class="tab-pane active" id="tab_1">
-					<!-- START OF WIDGET -->
+				echo "<!-- START OF TABS -->
+				<ul class='nav nav-tabs'>
+				  <li class='active'><a href='#tab_1' data-toggle='tab'>Project 1: {$_SESSION['projectCode']}</a></li>
+				  
+				  <li class='pull-right'><a href='#' class='text-muted'><i class='fa fa-gear'></i></a></li>
+				</ul>
+				<!-- END OF TABS -->";
+			
+			
+				require_once('mysql_connect.php');
+				
+				$query2="select * from neededmaterials"; 
+				$result2=mysqli_query($dbc,$query2);
+				
+				if($row=mysqli_fetch_array($result2,MYSQLI_ASSOC)){
+					if($row['pStatusID'] == 14){
+					echo "
 					
-					  <div class="info-box">
-						<span class="info-box-icon bg-green"><i class="fa fa-newspaper-o"></i></span>
+					<div class='tab-content'>
+					
+						<!-- START OF TAB CONTENT -->
+					
+					
+					  <div class='tab-pane active' id='tab_1'>
+							<!-- START OF WIDGET -->
+							
+							  <div class='info-box'>
+								<span class='info-box-icon bg-green'><i class='fa fa-newspaper-o'></i></span>
 
-						<div class="info-box-content">
-						
-						  <span class="info-box-text"><font size=5>Generate Needed Materials for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
-						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >GENERATE NEEDED MATERIALS</button></a></span>
-						
-						</div>
-						<!-- /.info-box-content -->
+								<div class='info-box-content'>
+								
+								  <span class='info-box-text'><font size=5>Time to Input Prices from Suppliers for Project Code: <b><font size=5>{$_SESSION['projectCode']}</font></b></font></span>
+								  <span class='info-box-number'><a href='ph_InputPrices.php'><button  style='width: 100%' type='button' class='btn btn-success btn-fill' >Input Prices from Suppliers </button></a></span>
+								
+								</div>
+								<!-- /.info-box-content -->
+							  </div>
+							  <!-- /.info-box -->
+							
+							
+							<!-- /.col -->
+							
+							<!-- END OF WIDGETS -->
 					  </div>
-					  <!-- /.info-box -->
 					
 					
-					<!-- /.col -->
+					<!-- END OF TAB CONTENT -->";}
 					
-					<!-- END OF WIDGETS -->
-              </div>
-			  
-			    <!-- END OF TAB CONTENT -->
-				
-				<!-- START OF TAB CONTENT -->
-				
-              <!-- /.tab-pane -->
-              <div class="tab-pane" id="tab_2">
-                <!-- START OF WIDGET -->
-					
-					  <div class="info-box">
-						<span class="info-box-icon bg-green"><i class="fa fa-newspaper-o"></i></span>
-
-						<div class="info-box-content">
-						
-						  <span class="info-box-text"><font size=5>Input Prices of Suppliers for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
-						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >INPUT PRICES</button></a></span>
-						
-						</div>
-						<!-- /.info-box-content -->
-					  </div>
-					  <!-- /.info-box -->
-					
-					
-					<!-- /.col -->
-					
-					<!-- END OF WIDGETS -->
-              </div>
-			  
-				<!-- END OF TAB CONTENT -->
-              <!-- /.tab-pane -->
-			  
-				<!-- START OF TAB CONTENT -->
-				
-              <div class="tab-pane" id="tab_3">
-                <!-- START OF WIDGET -->
-					
-					  <div class="info-box">
-						<span class="info-box-icon bg-green"><i class="fa fa-newspaper-o"></i></span>
-
-						<div class="info-box-content">
-						
-						  <span class="info-box-text"><font size=5>Generate Needed Materials for: <b><font size=5>Phase 2 (Footing)</font></b></font></span>
-						  <span class="info-box-number"><a href="#"><button  style="width: 100%" type="button" class="btn btn-success btn-fill" >GENERATE NEEDED MATERIALS</button></a></span>
-						
-						</div>
-						<!-- /.info-box-content -->
-					  </div>
-					  <!-- /.info-box -->
-					
-					
-					<!-- /.col -->
-					
-					<!-- END OF WIDGETS -->
-              </div>
-			  
-				<!-- END OF TAB CONTENT -->
-				
+					elseif($row['pStatusID'] != 14){
+						echo "<font size=5><b>You have nothing to do!</b></font>";
+					}
+				}
+			
+			}?>	
+			
               <!-- /.tab-pane -->
             </div>
             <!-- /.tab-content -->
@@ -356,7 +322,6 @@
 		<!-- END OF TABS -->
 		
 		<!-- /.row (main row) -->
-  
   
       </section>
 	                      </div>
