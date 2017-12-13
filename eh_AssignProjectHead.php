@@ -52,9 +52,10 @@ $message="Project members for project code: " . $_SESSION['projectCode'];
 /*End of main Submit conditional*/
 
 if (isset($message)){
- echo $_SESSION['projectCode'];
+ /*echo $_SESSION['projectCode'];
  echo $projectHead;
- echo '<font color="red">'.$message. '</font>';
+ echo '<font color="red">'.$message. '</font>';*/
+ echo "<script>alert('Successfully assigned the project head!');</script>";
 }
 
 ?>
@@ -156,7 +157,7 @@ if (isset($message)){
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -218,7 +219,7 @@ if (isset($message)){
       <div class="user-panel">
         <div class="pull-left image">
           <font color="white" size="3.5" face="Open Sans">Alexander Pierce </font><br>
-          <font face="Open Sans" size="1" color="white">Admin</font>
+          <font face="Open Sans" size="1" color="white">Engineering Head</font>
         </div>
         <div class="pull-left info">
           
@@ -227,86 +228,17 @@ if (isset($message)){
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">MAIN NAVIGATION</li>
-        <li class="active treeview">
-          <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-plus-circle"></i>
-            <span>Add</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="adminCreateClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
-            <li><a href="adminCreateEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
-            <li><a href="adminCreateMaterials.php"><i class="fa fa-circle-o"></i> Material</a></li>
-            <li><a href="adminCreateSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
-            <li><a href="adminCreateAddress.php"><i class="fa fa-circle-o"></i> Supplier Address</a></li>
-            <li><a href="adminAddUnitOfMeasurement.php"><i class="fa fa-circle-o"></i> Unit of Measurement</a></li>
-          </ul>
-        </li>
-        
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-minus-circle"></i>
-            <span>Deactivate</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="adminDeactivateClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
-            <li><a href="adminDeactivateEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
-            <li><a href="adminDeactivateMaterial.php"><i class="fa fa-circle-o"></i> Material</a></li>
-            <li><a href="adminDeactivateSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
-            <li><a href="adminDeactivateAddress.php"><i class="fa fa-circle-o"></i> Supplier Address</a></li>
-            <li><a href="adminDeactivateUnitOfMeasurement.php"><i class="fa fa-circle-o"></i> Unit of Measurement</a></li>
-          </ul>
-        </li>
-        
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-pencil-square-o"></i>
-            <span>Edit</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="adminEditClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
-            <li><a href="adminEditEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
-            <li><a href="adminEditMaterial.php"><i class="fa fa-circle-o"></i> Material</a></li>
-            <li><a href="adminEditSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
-          </ul>
-        </li>
-        
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-files-o"></i>
-            <span>View</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="adminViewClient.php"><i class="fa fa-circle-o"></i> Client</a></li>
-            <li><a href="adminViewEmployee.php"><i class="fa fa-circle-o"></i> Employee</a></li>
-            <li><a href="adminViewMaterial.php"><i class="fa fa-circle-o"></i> Material</a></li>
-            <li><a href="adminViewSupplier.php"><i class="fa fa-circle-o"></i> Supplier</a></li>
-          </ul>
-        </li>
-        
-        <li class="active treeview">
-          <a href="#">
-            <i class="fa fa-reorder"></i> <span>Assign Approvals</span>
-          </a>
-        </li>
-      </ul>
+         <li class="header">MAIN NAVIGATION</li>
+         <li>
+          <a href="eh_ProjectList.php">Project List</a>
+         </li>
+         <li>
+          <a href="eh_assignApprovals.php">Assign Approvals</a>
+         </li>
+         <li>
+          <a href="eh_assignProjectHead.php">Assign Project Head</a>
+         </li>
+       </ul>
 
     <!-- /.sidebar -->
   </aside>

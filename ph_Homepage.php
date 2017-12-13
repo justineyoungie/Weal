@@ -92,7 +92,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -165,53 +165,11 @@
       <ul class="sidebar-menu" data-widget="tree">
 		
         <li class="header">MAIN NAVIGATION</li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Suppliers</span>
-            
-          </a>
+        <li>
+            <a href="ph_GenerateNeededMaterials.php">Generate Needed Materials</a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-male"></i> <span>Create Excel Price Summary</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-hand-pointer-o"></i> <span>Select Supplier for Purchasing</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create List of Needed Materials</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Input Prices of Needed Materials</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Purchase Order</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Record Delivery Method</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Project Turnover</span>
-            
-          </a>
+        <li>
+          <a href="ph_InputPrices.php">Input Prices from Suppliers</a>
         </li>
       </ul>
 		
@@ -264,8 +222,6 @@
 				</ul>
 				<!-- END OF TABS -->";
 			
-			
-				require_once('mysql_connect.php');
 				
 				$query2="select * from neededmaterials"; 
 				$result2=mysqli_query($dbc,$query2);

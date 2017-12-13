@@ -163,28 +163,13 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-		
         <li class="header">MAIN NAVIGATION</li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Check Availability</span>
-            
-          </a>
+        <li>
+            <a href="wh_pullout.php">Pullout Items</a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-long-arrow-up"></i> <span>Update Inventory</span>
-            
-          </a>
+        <li>
+            <a href="wh_receivedPages.php">Receive Materials</a>
         </li>
-
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Delivery Receipt</span>
-            
-          </a>
-        </li>
-		
       </ul>
     </section>
     <!-- /.sidebar -->

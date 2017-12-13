@@ -111,7 +111,7 @@ if (isset($_GET['r'])){
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -182,68 +182,18 @@ if (isset($_GET['r'])){
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-		
         <li class="header">MAIN NAVIGATION</li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Bill of Materials</span>
-            
-          </a>
+        <li>
+         <a href="en_assignProjectMembers.php">Assign Project Members</a>
         </li>
-
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Accessories List <b><font size="3">(AL)</b></font></span>
-            
-          </a>
+        <li>
+         <a href="en_createAL.php">Create Accessories List</a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Adjust AL</span>
-            
-          </a>
+        <li>
+         <a href="en_requestRS.php">Request Materials</a>
         </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Check AL</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Approve AL</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Requisition Slip <b><font size="3">(RS)</b></font></span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-clone"></i> <span>Compare AL with RS</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-check"></i> <span>Verify Purchase Order</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Whereabouts Slip</span>
-            
-          </a>
-        </li>
-		<li>
-          <a href="pages/widgets.html">
-            <i class="fa fa-edit"></i> <span>Create Transfer Request</span>
-            
-          </a>
+        <li>
+         <a href="en_informStatus.php">Inform Project Status</a>
         </li>
       </ul>
     </section>
